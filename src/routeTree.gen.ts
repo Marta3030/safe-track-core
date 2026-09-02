@@ -11,7 +11,15 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedAdministracionRouteImport } from './routes/_authenticated/administracion'
+import { Route as AuthenticatedCapacitacionesRouteImport } from './routes/_authenticated/capacitaciones'
+import { Route as AuthenticatedCasosRouteImport } from './routes/_authenticated/casos'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedMiperRouteImport } from './routes/_authenticated/miper'
+import { Route as AuthenticatedPlanesAccionRouteImport } from './routes/_authenticated/planes-accion'
+import { Route as AuthenticatedReportesRouteImport } from './routes/_authenticated/reportes'
+import { Route as AuthActualizarClaveRouteImport } from './routes/auth_.actualizar-clave'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,37 +30,138 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdministracionRoute =
+  AuthenticatedAdministracionRouteImport.update({
+    id: '/administracion',
+    path: '/administracion',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCapacitacionesRoute =
+  AuthenticatedCapacitacionesRouteImport.update({
+    id: '/capacitaciones',
+    path: '/capacitaciones',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCasosRoute = AuthenticatedCasosRouteImport.update({
+  id: '/casos',
+  path: '/casos',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedMiperRoute = AuthenticatedMiperRouteImport.update({
+  id: '/miper',
+  path: '/miper',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPlanesAccionRoute =
+  AuthenticatedPlanesAccionRouteImport.update({
+    id: '/planes-accion',
+    path: '/planes-accion',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedReportesRoute = AuthenticatedReportesRouteImport.update({
+  id: '/reportes',
+  path: '/reportes',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthActualizarClaveRoute = AuthActualizarClaveRouteImport.update({
+  id: '/auth_/actualizar-clave',
+  path: '/auth/actualizar-clave',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/administracion': typeof AuthenticatedAdministracionRoute
+  '/capacitaciones': typeof AuthenticatedCapacitacionesRoute
+  '/casos': typeof AuthenticatedCasosRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/miper': typeof AuthenticatedMiperRoute
+  '/planes-accion': typeof AuthenticatedPlanesAccionRoute
+  '/reportes': typeof AuthenticatedReportesRoute
+  '/auth/actualizar-clave': typeof AuthActualizarClaveRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/administracion': typeof AuthenticatedAdministracionRoute
+  '/capacitaciones': typeof AuthenticatedCapacitacionesRoute
+  '/casos': typeof AuthenticatedCasosRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/miper': typeof AuthenticatedMiperRoute
+  '/planes-accion': typeof AuthenticatedPlanesAccionRoute
+  '/reportes': typeof AuthenticatedReportesRoute
+  '/auth/actualizar-clave': typeof AuthActualizarClaveRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/_authenticated/administracion': typeof AuthenticatedAdministracionRoute
+  '/_authenticated/capacitaciones': typeof AuthenticatedCapacitacionesRoute
+  '/_authenticated/casos': typeof AuthenticatedCasosRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/miper': typeof AuthenticatedMiperRoute
+  '/_authenticated/planes-accion': typeof AuthenticatedPlanesAccionRoute
+  '/_authenticated/reportes': typeof AuthenticatedReportesRoute
+  '/auth_/actualizar-clave': typeof AuthActualizarClaveRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/administracion'
+    | '/capacitaciones'
+    | '/casos'
+    | '/dashboard'
+    | '/miper'
+    | '/planes-accion'
+    | '/reportes'
+    | '/auth/actualizar-clave'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard'
-  id: '__root__' | '/' | '/_authenticated' | '/_authenticated/dashboard'
+  to:
+    | '/'
+    | '/auth'
+    | '/administracion'
+    | '/capacitaciones'
+    | '/casos'
+    | '/dashboard'
+    | '/miper'
+    | '/planes-accion'
+    | '/reportes'
+    | '/auth/actualizar-clave'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/administracion'
+    | '/_authenticated/capacitaciones'
+    | '/_authenticated/casos'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/miper'
+    | '/_authenticated/planes-accion'
+    | '/_authenticated/reportes'
+    | '/auth_/actualizar-clave'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  AuthActualizarClaveRoute: typeof AuthActualizarClaveRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -71,6 +180,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/administracion': {
+      id: '/_authenticated/administracion'
+      path: '/administracion'
+      fullPath: '/administracion'
+      preLoaderRoute: typeof AuthenticatedAdministracionRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/capacitaciones': {
+      id: '/_authenticated/capacitaciones'
+      path: '/capacitaciones'
+      fullPath: '/capacitaciones'
+      preLoaderRoute: typeof AuthenticatedCapacitacionesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/casos': {
+      id: '/_authenticated/casos'
+      path: '/casos'
+      fullPath: '/casos'
+      preLoaderRoute: typeof AuthenticatedCasosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -78,15 +215,55 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/miper': {
+      id: '/_authenticated/miper'
+      path: '/miper'
+      fullPath: '/miper'
+      preLoaderRoute: typeof AuthenticatedMiperRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/planes-accion': {
+      id: '/_authenticated/planes-accion'
+      path: '/planes-accion'
+      fullPath: '/planes-accion'
+      preLoaderRoute: typeof AuthenticatedPlanesAccionRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/reportes': {
+      id: '/_authenticated/reportes'
+      path: '/reportes'
+      fullPath: '/reportes'
+      preLoaderRoute: typeof AuthenticatedReportesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/auth_/actualizar-clave': {
+      id: '/auth_/actualizar-clave'
+      path: '/auth/actualizar-clave'
+      fullPath: '/auth/actualizar-clave'
+      preLoaderRoute: typeof AuthActualizarClaveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdministracionRoute: typeof AuthenticatedAdministracionRoute
+  AuthenticatedCapacitacionesRoute: typeof AuthenticatedCapacitacionesRoute
+  AuthenticatedCasosRoute: typeof AuthenticatedCasosRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedMiperRoute: typeof AuthenticatedMiperRoute
+  AuthenticatedPlanesAccionRoute: typeof AuthenticatedPlanesAccionRoute
+  AuthenticatedReportesRoute: typeof AuthenticatedReportesRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdministracionRoute: AuthenticatedAdministracionRoute,
+  AuthenticatedCapacitacionesRoute: AuthenticatedCapacitacionesRoute,
+  AuthenticatedCasosRoute: AuthenticatedCasosRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedMiperRoute: AuthenticatedMiperRoute,
+  AuthenticatedPlanesAccionRoute: AuthenticatedPlanesAccionRoute,
+  AuthenticatedReportesRoute: AuthenticatedReportesRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -95,6 +272,8 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  AuthActualizarClaveRoute: AuthActualizarClaveRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
