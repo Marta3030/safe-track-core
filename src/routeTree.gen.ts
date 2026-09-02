@@ -17,6 +17,7 @@ import { Route as AuthenticatedCasosRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedMiperRouteImport } from './routes/_authenticated/miper'
 import { Route as AuthenticatedPlanesAccionRouteImport } from './routes/_authenticated/planes-accion'
+import { Route as AuthenticatedReportesRouteImport } from './routes/_authenticated/reportes'
 import { Route as AuthActualizarClaveRouteImport } from './routes/auth.actualizar-clave'
 
 const IndexRoute = IndexRouteImport.update({
@@ -60,6 +61,11 @@ const AuthenticatedPlanesAccionRoute =
     path: '/planes-accion',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedReportesRoute = AuthenticatedReportesRouteImport.update({
+  id: '/reportes',
+  path: '/reportes',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthActualizarClaveRoute = AuthActualizarClaveRouteImport.update({
   id: '/actualizar-clave',
   path: '/actualizar-clave',
@@ -74,6 +80,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/miper': typeof AuthenticatedMiperRoute
   '/planes-accion': typeof AuthenticatedPlanesAccionRoute
+  '/reportes': typeof AuthenticatedReportesRoute
   '/auth/actualizar-clave': typeof AuthActualizarClaveRoute
 }
 export interface FileRoutesByTo {
@@ -84,6 +91,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/miper': typeof AuthenticatedMiperRoute
   '/planes-accion': typeof AuthenticatedPlanesAccionRoute
+  '/reportes': typeof AuthenticatedReportesRoute
   '/auth/actualizar-clave': typeof AuthActualizarClaveRoute
 }
 export interface FileRoutesById {
@@ -96,6 +104,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/miper': typeof AuthenticatedMiperRoute
   '/_authenticated/planes-accion': typeof AuthenticatedPlanesAccionRoute
+  '/_authenticated/reportes': typeof AuthenticatedReportesRoute
   '/auth/actualizar-clave': typeof AuthActualizarClaveRoute
 }
 export interface FileRouteTypes {
@@ -108,6 +117,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/miper'
     | '/planes-accion'
+    | '/reportes'
     | '/auth/actualizar-clave'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -118,6 +128,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/miper'
     | '/planes-accion'
+    | '/reportes'
     | '/auth/actualizar-clave'
   id:
     | '__root__'
@@ -129,6 +140,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/miper'
     | '/_authenticated/planes-accion'
+    | '/_authenticated/reportes'
     | '/auth/actualizar-clave'
   fileRoutesById: FileRoutesById
 }
@@ -196,6 +208,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPlanesAccionRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/reportes': {
+      id: '/_authenticated/reportes'
+      path: '/reportes'
+      fullPath: '/reportes'
+      preLoaderRoute: typeof AuthenticatedReportesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/auth/actualizar-clave': {
       id: '/auth/actualizar-clave'
       path: '/actualizar-clave'
@@ -212,6 +231,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedMiperRoute: typeof AuthenticatedMiperRoute
   AuthenticatedPlanesAccionRoute: typeof AuthenticatedPlanesAccionRoute
+  AuthenticatedReportesRoute: typeof AuthenticatedReportesRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -220,6 +240,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedMiperRoute: AuthenticatedMiperRoute,
   AuthenticatedPlanesAccionRoute: AuthenticatedPlanesAccionRoute,
+  AuthenticatedReportesRoute: AuthenticatedReportesRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
