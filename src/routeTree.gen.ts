@@ -19,7 +19,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedMiperRouteImport } from './routes/_authenticated/miper'
 import { Route as AuthenticatedPlanesAccionRouteImport } from './routes/_authenticated/planes-accion'
 import { Route as AuthenticatedReportesRouteImport } from './routes/_authenticated/reportes'
-import { Route as AuthActualizarClaveRouteImport } from './routes/auth.actualizar-clave'
+import { Route as AuthActualizarClaveRouteImport } from './routes/auth_.actualizar-clave'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -74,14 +74,14 @@ const AuthenticatedReportesRoute = AuthenticatedReportesRouteImport.update({
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthActualizarClaveRoute = AuthActualizarClaveRouteImport.update({
-  id: '/actualizar-clave',
-  path: '/actualizar-clave',
-  getParentRoute: () => AuthRoute,
+  id: '/auth_/actualizar-clave',
+  path: '/auth/actualizar-clave',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRouteWithChildren
+  '/auth': typeof AuthRoute
   '/administracion': typeof AuthenticatedAdministracionRoute
   '/capacitaciones': typeof AuthenticatedCapacitacionesRoute
   '/casos': typeof AuthenticatedCasosRoute
@@ -93,7 +93,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRouteWithChildren
+  '/auth': typeof AuthRoute
   '/administracion': typeof AuthenticatedAdministracionRoute
   '/capacitaciones': typeof AuthenticatedCapacitacionesRoute
   '/casos': typeof AuthenticatedCasosRoute
@@ -107,7 +107,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/auth': typeof AuthRouteWithChildren
+  '/auth': typeof AuthRoute
   '/_authenticated/administracion': typeof AuthenticatedAdministracionRoute
   '/_authenticated/capacitaciones': typeof AuthenticatedCapacitacionesRoute
   '/_authenticated/casos': typeof AuthenticatedCasosRoute
@@ -115,7 +115,7 @@ export interface FileRoutesById {
   '/_authenticated/miper': typeof AuthenticatedMiperRoute
   '/_authenticated/planes-accion': typeof AuthenticatedPlanesAccionRoute
   '/_authenticated/reportes': typeof AuthenticatedReportesRoute
-  '/auth/actualizar-clave': typeof AuthActualizarClaveRoute
+  '/auth_/actualizar-clave': typeof AuthActualizarClaveRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -154,13 +154,14 @@ export interface FileRouteTypes {
     | '/_authenticated/miper'
     | '/_authenticated/planes-accion'
     | '/_authenticated/reportes'
-    | '/auth/actualizar-clave'
+    | '/auth_/actualizar-clave'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
-  AuthRoute: typeof AuthRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  AuthActualizarClaveRoute: typeof AuthActualizarClaveRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -235,12 +236,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedReportesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/auth/actualizar-clave': {
-      id: '/auth/actualizar-clave'
-      path: '/actualizar-clave'
+    '/auth_/actualizar-clave': {
+      id: '/auth_/actualizar-clave'
+      path: '/auth/actualizar-clave'
       fullPath: '/auth/actualizar-clave'
       preLoaderRoute: typeof AuthActualizarClaveRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -268,20 +269,11 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
-interface AuthRouteChildren {
-  AuthActualizarClaveRoute: typeof AuthActualizarClaveRoute
-}
-
-const AuthRouteChildren: AuthRouteChildren = {
-  AuthActualizarClaveRoute: AuthActualizarClaveRoute,
-}
-
-const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-  AuthRoute: AuthRouteWithChildren,
+  AuthRoute: AuthRoute,
+  AuthActualizarClaveRoute: AuthActualizarClaveRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
