@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedAdministracionRouteImport } from './routes/_authenticated/administracion'
 import { Route as AuthenticatedCapacitacionesRouteImport } from './routes/_authenticated/capacitaciones'
 import { Route as AuthenticatedCasosRouteImport } from './routes/_authenticated/casos'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -34,6 +35,12 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdministracionRoute =
+  AuthenticatedAdministracionRouteImport.update({
+    id: '/administracion',
+    path: '/administracion',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedCapacitacionesRoute =
   AuthenticatedCapacitacionesRouteImport.update({
     id: '/capacitaciones',
@@ -75,6 +82,7 @@ const AuthActualizarClaveRoute = AuthActualizarClaveRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
+  '/administracion': typeof AuthenticatedAdministracionRoute
   '/capacitaciones': typeof AuthenticatedCapacitacionesRoute
   '/casos': typeof AuthenticatedCasosRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -86,6 +94,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
+  '/administracion': typeof AuthenticatedAdministracionRoute
   '/capacitaciones': typeof AuthenticatedCapacitacionesRoute
   '/casos': typeof AuthenticatedCasosRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -99,6 +108,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
+  '/_authenticated/administracion': typeof AuthenticatedAdministracionRoute
   '/_authenticated/capacitaciones': typeof AuthenticatedCapacitacionesRoute
   '/_authenticated/casos': typeof AuthenticatedCasosRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
@@ -112,6 +122,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/administracion'
     | '/capacitaciones'
     | '/casos'
     | '/dashboard'
@@ -123,6 +134,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/administracion'
     | '/capacitaciones'
     | '/casos'
     | '/dashboard'
@@ -135,6 +147,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/administracion'
     | '/_authenticated/capacitaciones'
     | '/_authenticated/casos'
     | '/_authenticated/dashboard'
@@ -172,6 +185,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/administracion': {
+      id: '/_authenticated/administracion'
+      path: '/administracion'
+      fullPath: '/administracion'
+      preLoaderRoute: typeof AuthenticatedAdministracionRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/capacitaciones': {
       id: '/_authenticated/capacitaciones'
@@ -226,6 +246,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdministracionRoute: typeof AuthenticatedAdministracionRoute
   AuthenticatedCapacitacionesRoute: typeof AuthenticatedCapacitacionesRoute
   AuthenticatedCasosRoute: typeof AuthenticatedCasosRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
@@ -235,6 +256,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdministracionRoute: AuthenticatedAdministracionRoute,
   AuthenticatedCapacitacionesRoute: AuthenticatedCapacitacionesRoute,
   AuthenticatedCasosRoute: AuthenticatedCasosRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
