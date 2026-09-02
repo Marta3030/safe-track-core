@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 type ModulePageProps = {
   title: string;
-  subtitle?: string;
+  subtitle?: string | undefined;
   children: ReactNode;
 };
 

@@ -13,7 +13,7 @@ import { ROLE_LABELS, type AppRole } from "@/lib/roles";
 
 type AppHeaderProps = {
   title: string;
-  subtitle?: string;
+  subtitle?: string | undefined;
   role: AppRole;
   userName: string;
   email: string;

@@ -9,7 +9,7 @@ import type { AppRole } from "@/lib/roles";
 
 type AppLayoutProps = {
   title: string;
-  subtitle?: string;
+  subtitle?: string | undefined;
   role: AppRole;
   userName: string;
   email: string;
