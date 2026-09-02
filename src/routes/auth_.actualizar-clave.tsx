@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 
-export const Route = createFileRoute("/auth/actualizar-clave")({
+export const Route = createFileRoute("/auth_/actualizar-clave")({
   head: () => ({
     meta: [
       { title: "Cambiar contraseña | Safety360 HSEQ" },
