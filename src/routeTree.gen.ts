@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedCasosRouteImport } from './routes/_authenticated/casos'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedMiperRouteImport } from './routes/_authenticated/miper'
 import { Route as AuthenticatedPlanesAccionRouteImport } from './routes/_authenticated/planes-accion'
 import { Route as AuthActualizarClaveRouteImport } from './routes/auth.actualizar-clave'
 
@@ -41,6 +42,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedMiperRoute = AuthenticatedMiperRouteImport.update({
+  id: '/miper',
+  path: '/miper',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedPlanesAccionRoute =
   AuthenticatedPlanesAccionRouteImport.update({
     id: '/planes-accion',
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteWithChildren
   '/casos': typeof AuthenticatedCasosRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/miper': typeof AuthenticatedMiperRoute
   '/planes-accion': typeof AuthenticatedPlanesAccionRoute
   '/auth/actualizar-clave': typeof AuthActualizarClaveRoute
 }
@@ -66,6 +73,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRouteWithChildren
   '/casos': typeof AuthenticatedCasosRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/miper': typeof AuthenticatedMiperRoute
   '/planes-accion': typeof AuthenticatedPlanesAccionRoute
   '/auth/actualizar-clave': typeof AuthActualizarClaveRoute
 }
@@ -76,6 +84,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRouteWithChildren
   '/_authenticated/casos': typeof AuthenticatedCasosRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/miper': typeof AuthenticatedMiperRoute
   '/_authenticated/planes-accion': typeof AuthenticatedPlanesAccionRoute
   '/auth/actualizar-clave': typeof AuthActualizarClaveRoute
 }
@@ -86,6 +95,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/casos'
     | '/dashboard'
+    | '/miper'
     | '/planes-accion'
     | '/auth/actualizar-clave'
   fileRoutesByTo: FileRoutesByTo
@@ -94,6 +104,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/casos'
     | '/dashboard'
+    | '/miper'
     | '/planes-accion'
     | '/auth/actualizar-clave'
   id:
@@ -103,6 +114,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/casos'
     | '/_authenticated/dashboard'
+    | '/_authenticated/miper'
     | '/_authenticated/planes-accion'
     | '/auth/actualizar-clave'
   fileRoutesById: FileRoutesById
@@ -150,6 +162,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/miper': {
+      id: '/_authenticated/miper'
+      path: '/miper'
+      fullPath: '/miper'
+      preLoaderRoute: typeof AuthenticatedMiperRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/planes-accion': {
       id: '/_authenticated/planes-accion'
       path: '/planes-accion'
@@ -170,12 +189,14 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedCasosRoute: typeof AuthenticatedCasosRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedMiperRoute: typeof AuthenticatedMiperRoute
   AuthenticatedPlanesAccionRoute: typeof AuthenticatedPlanesAccionRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCasosRoute: AuthenticatedCasosRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedMiperRoute: AuthenticatedMiperRoute,
   AuthenticatedPlanesAccionRoute: AuthenticatedPlanesAccionRoute,
 }
 
