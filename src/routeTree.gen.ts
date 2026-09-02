@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedCasosRouteImport } from './routes/_authenticated/casos'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedPlanesAccionRouteImport } from './routes/_authenticated/planes-accion'
 import { Route as AuthActualizarClaveRouteImport } from './routes/auth.actualizar-clave'
 
 const IndexRoute = IndexRouteImport.update({
@@ -40,6 +41,12 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPlanesAccionRoute =
+  AuthenticatedPlanesAccionRouteImport.update({
+    id: '/planes-accion',
+    path: '/planes-accion',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthActualizarClaveRoute = AuthActualizarClaveRouteImport.update({
   id: '/actualizar-clave',
   path: '/actualizar-clave',
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteWithChildren
   '/casos': typeof AuthenticatedCasosRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/planes-accion': typeof AuthenticatedPlanesAccionRoute
   '/auth/actualizar-clave': typeof AuthActualizarClaveRoute
 }
 export interface FileRoutesByTo {
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRouteWithChildren
   '/casos': typeof AuthenticatedCasosRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/planes-accion': typeof AuthenticatedPlanesAccionRoute
   '/auth/actualizar-clave': typeof AuthActualizarClaveRoute
 }
 export interface FileRoutesById {
@@ -67,13 +76,26 @@ export interface FileRoutesById {
   '/auth': typeof AuthRouteWithChildren
   '/_authenticated/casos': typeof AuthenticatedCasosRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/planes-accion': typeof AuthenticatedPlanesAccionRoute
   '/auth/actualizar-clave': typeof AuthActualizarClaveRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/casos' | '/dashboard' | '/auth/actualizar-clave'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/casos'
+    | '/dashboard'
+    | '/planes-accion'
+    | '/auth/actualizar-clave'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/casos' | '/dashboard' | '/auth/actualizar-clave'
+  to:
+    | '/'
+    | '/auth'
+    | '/casos'
+    | '/dashboard'
+    | '/planes-accion'
+    | '/auth/actualizar-clave'
   id:
     | '__root__'
     | '/'
@@ -81,6 +103,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/casos'
     | '/_authenticated/dashboard'
+    | '/_authenticated/planes-accion'
     | '/auth/actualizar-clave'
   fileRoutesById: FileRoutesById
 }
@@ -127,6 +150,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/planes-accion': {
+      id: '/_authenticated/planes-accion'
+      path: '/planes-accion'
+      fullPath: '/planes-accion'
+      preLoaderRoute: typeof AuthenticatedPlanesAccionRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/auth/actualizar-clave': {
       id: '/auth/actualizar-clave'
       path: '/actualizar-clave'
@@ -140,11 +170,13 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedCasosRoute: typeof AuthenticatedCasosRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedPlanesAccionRoute: typeof AuthenticatedPlanesAccionRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCasosRoute: AuthenticatedCasosRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedPlanesAccionRoute: AuthenticatedPlanesAccionRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
