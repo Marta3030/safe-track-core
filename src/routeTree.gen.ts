@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedCapacitacionesRouteImport } from './routes/_authenticated/capacitaciones'
 import { Route as AuthenticatedCasosRouteImport } from './routes/_authenticated/casos'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedMiperRouteImport } from './routes/_authenticated/miper'
@@ -32,6 +33,12 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedCapacitacionesRoute =
+  AuthenticatedCapacitacionesRouteImport.update({
+    id: '/capacitaciones',
+    path: '/capacitaciones',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedCasosRoute = AuthenticatedCasosRouteImport.update({
   id: '/casos',
   path: '/casos',
@@ -62,6 +69,7 @@ const AuthActualizarClaveRoute = AuthActualizarClaveRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
+  '/capacitaciones': typeof AuthenticatedCapacitacionesRoute
   '/casos': typeof AuthenticatedCasosRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/miper': typeof AuthenticatedMiperRoute
@@ -71,6 +79,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
+  '/capacitaciones': typeof AuthenticatedCapacitacionesRoute
   '/casos': typeof AuthenticatedCasosRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/miper': typeof AuthenticatedMiperRoute
@@ -82,6 +91,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
+  '/_authenticated/capacitaciones': typeof AuthenticatedCapacitacionesRoute
   '/_authenticated/casos': typeof AuthenticatedCasosRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/miper': typeof AuthenticatedMiperRoute
@@ -93,6 +103,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/capacitaciones'
     | '/casos'
     | '/dashboard'
     | '/miper'
@@ -102,6 +113,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/capacitaciones'
     | '/casos'
     | '/dashboard'
     | '/miper'
@@ -112,6 +124,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/capacitaciones'
     | '/_authenticated/casos'
     | '/_authenticated/dashboard'
     | '/_authenticated/miper'
@@ -147,6 +160,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/capacitaciones': {
+      id: '/_authenticated/capacitaciones'
+      path: '/capacitaciones'
+      fullPath: '/capacitaciones'
+      preLoaderRoute: typeof AuthenticatedCapacitacionesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/casos': {
       id: '/_authenticated/casos'
@@ -187,6 +207,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedCapacitacionesRoute: typeof AuthenticatedCapacitacionesRoute
   AuthenticatedCasosRoute: typeof AuthenticatedCasosRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedMiperRoute: typeof AuthenticatedMiperRoute
@@ -194,6 +215,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedCapacitacionesRoute: AuthenticatedCapacitacionesRoute,
   AuthenticatedCasosRoute: AuthenticatedCasosRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedMiperRoute: AuthenticatedMiperRoute,
