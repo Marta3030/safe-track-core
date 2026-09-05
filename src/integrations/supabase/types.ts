@@ -561,17 +561,74 @@ export type Database = {
           },
         ]
       }
+      investigation_interviews: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          interviewed_at: string
+          interviewee_name: string
+          interviewee_role: string | null
+          investigation_id: string
+          notes: string | null
+          relation_to_event: string | null
+          statement: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          interviewed_at?: string
+          interviewee_name: string
+          interviewee_role?: string | null
+          investigation_id: string
+          notes?: string | null
+          relation_to_event?: string | null
+          statement?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          interviewed_at?: string
+          interviewee_name?: string
+          interviewee_role?: string | null
+          investigation_id?: string
+          notes?: string | null
+          relation_to_event?: string | null
+          statement?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "investigation_interviews_investigation_id_fkey"
+            columns: ["investigation_id"]
+            isOneToOne: false
+            referencedRelation: "investigations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       investigations: {
         Row: {
           case_id: string
           conclusions: string | null
+          conditions_description: string | null
           created_at: string
           created_by: string | null
+          equipment_involved: string | null
+          event_sequence: string | null
+          existing_controls: string | null
           facts_summary: string | null
           finished_at: string | null
           id: string
           lead_investigator_id: string | null
           methodology: string
+          observations: string | null
+          prior_training: string | null
+          procedures_review: string | null
           started_at: string
           team: string | null
           updated_at: string
@@ -579,13 +636,20 @@ export type Database = {
         Insert: {
           case_id: string
           conclusions?: string | null
+          conditions_description?: string | null
           created_at?: string
           created_by?: string | null
+          equipment_involved?: string | null
+          event_sequence?: string | null
+          existing_controls?: string | null
           facts_summary?: string | null
           finished_at?: string | null
           id?: string
           lead_investigator_id?: string | null
           methodology?: string
+          observations?: string | null
+          prior_training?: string | null
+          procedures_review?: string | null
           started_at?: string
           team?: string | null
           updated_at?: string
@@ -593,13 +657,20 @@ export type Database = {
         Update: {
           case_id?: string
           conclusions?: string | null
+          conditions_description?: string | null
           created_at?: string
           created_by?: string | null
+          equipment_involved?: string | null
+          event_sequence?: string | null
+          existing_controls?: string | null
           facts_summary?: string | null
           finished_at?: string | null
           id?: string
           lead_investigator_id?: string | null
           methodology?: string
+          observations?: string | null
+          prior_training?: string | null
+          procedures_review?: string | null
           started_at?: string
           team?: string | null
           updated_at?: string
