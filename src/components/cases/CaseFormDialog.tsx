@@ -152,11 +152,14 @@ export function CaseFormDialog({
       };
 
       if (caseRow) {
-        const update: Record<string, unknown> = { ...payload };
-        if (mode === "report" && caseRow.status === "borrador") {
-          update["status"] = "reportado";
-          update["reported_at"] = new Date().toISOString();
-        }
+        const promote = mode === "report" && caseRow.status === "borrador";
+        const update = {
+          ...payload,
+          ...(promote
+            ? { status: "reportado" as const, reported_at: new Date().toISOString() }
+            : {}),
+        };
+
         const { data, error } = await supabase
           .from("cases")
           .update(update)
