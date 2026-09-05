@@ -20,6 +20,7 @@ import { Route as AuthenticatedMiperRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedPlanesAccionRouteImport } from './routes/_authenticated/planes-accion'
 import { Route as AuthenticatedReportesRouteImport } from './routes/_authenticated/reportes'
 import { Route as AuthActualizarClaveRouteImport } from './routes/auth_.actualizar-clave'
+import { Route as AuthenticatedCasosCaseIdRouteImport } from './routes/_authenticated/casos_.$caseId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -78,6 +79,12 @@ const AuthActualizarClaveRoute = AuthActualizarClaveRouteImport.update({
   path: '/auth/actualizar-clave',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedCasosCaseIdRoute =
+  AuthenticatedCasosCaseIdRouteImport.update({
+    id: '/casos_/$caseId',
+    path: '/casos/$caseId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -90,6 +97,7 @@ export interface FileRoutesByFullPath {
   '/planes-accion': typeof AuthenticatedPlanesAccionRoute
   '/reportes': typeof AuthenticatedReportesRoute
   '/auth/actualizar-clave': typeof AuthActualizarClaveRoute
+  '/casos/$caseId': typeof AuthenticatedCasosCaseIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -102,6 +110,7 @@ export interface FileRoutesByTo {
   '/planes-accion': typeof AuthenticatedPlanesAccionRoute
   '/reportes': typeof AuthenticatedReportesRoute
   '/auth/actualizar-clave': typeof AuthActualizarClaveRoute
+  '/casos/$caseId': typeof AuthenticatedCasosCaseIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -116,6 +125,7 @@ export interface FileRoutesById {
   '/_authenticated/planes-accion': typeof AuthenticatedPlanesAccionRoute
   '/_authenticated/reportes': typeof AuthenticatedReportesRoute
   '/auth_/actualizar-clave': typeof AuthActualizarClaveRoute
+  '/_authenticated/casos_/$caseId': typeof AuthenticatedCasosCaseIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -130,6 +140,7 @@ export interface FileRouteTypes {
     | '/planes-accion'
     | '/reportes'
     | '/auth/actualizar-clave'
+    | '/casos/$caseId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -142,6 +153,7 @@ export interface FileRouteTypes {
     | '/planes-accion'
     | '/reportes'
     | '/auth/actualizar-clave'
+    | '/casos/$caseId'
   id:
     | '__root__'
     | '/'
@@ -155,6 +167,7 @@ export interface FileRouteTypes {
     | '/_authenticated/planes-accion'
     | '/_authenticated/reportes'
     | '/auth_/actualizar-clave'
+    | '/_authenticated/casos_/$caseId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -243,6 +256,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthActualizarClaveRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/casos_/$caseId': {
+      id: '/_authenticated/casos_/$caseId'
+      path: '/casos/$caseId'
+      fullPath: '/casos/$caseId'
+      preLoaderRoute: typeof AuthenticatedCasosCaseIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -254,6 +274,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMiperRoute: typeof AuthenticatedMiperRoute
   AuthenticatedPlanesAccionRoute: typeof AuthenticatedPlanesAccionRoute
   AuthenticatedReportesRoute: typeof AuthenticatedReportesRoute
+  AuthenticatedCasosCaseIdRoute: typeof AuthenticatedCasosCaseIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -264,6 +285,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedMiperRoute: AuthenticatedMiperRoute,
   AuthenticatedPlanesAccionRoute: AuthenticatedPlanesAccionRoute,
   AuthenticatedReportesRoute: AuthenticatedReportesRoute,
+  AuthenticatedCasosCaseIdRoute: AuthenticatedCasosCaseIdRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
