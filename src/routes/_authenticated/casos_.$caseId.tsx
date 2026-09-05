@@ -62,15 +62,17 @@ function CaseDetailPage() {
 
   const changeStatus = useMutation({
     mutationFn: async (next: CaseStatus) => {
-      const patch: Record<string, unknown> = { status: next };
-      patch['closed_at'] = next === "cerrado" ? new Date().toISOString() : null;
       const { error: updateError } = await supabase
         .from("cases")
-        .update(patch)
+        .update({
+          status: next,
+          closed_at: next === "cerrado" ? new Date().toISOString() : null,
+        })
         .eq("id", caseId);
       if (updateError) throw updateError;
       return next;
     },
+
     onSuccess: (next) => {
       toast.success(`Caso actualizado a “${CASE_STATUS_LABELS[next]}”`);
       void queryClient.invalidateQueries({ queryKey: casesQueryKey() });
