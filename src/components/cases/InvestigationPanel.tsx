@@ -344,11 +344,13 @@ function TextBlock({
   disabled: boolean;
   onChange: (value: string) => void;
 }) {
+  const fieldId = useId();
   return (
     <div className="space-y-1.5">
-      <Label>{label}</Label>
+      <Label htmlFor={fieldId}>{label}</Label>
       {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
       <Textarea
+        id={fieldId}
         rows={4}
         value={value}
         disabled={disabled}
