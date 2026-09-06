@@ -8,6 +8,7 @@
   - [x] Expediente del caso con estados
   - [x] Responsive y pruebas end-to-end
 
-- [ ] Fase 4 · Análisis causal (pendiente)
+- [x] Fase 4 · Pestaña Investigación (entrevistas, secuencia, condiciones, controles)
+- [ ] Fase 4b · Análisis causal (pendiente)
 - [ ] Fase 5 · Planes de acción (pendiente)
 - [ ] Fase 6 · MIPER, capacitaciones, reportes
