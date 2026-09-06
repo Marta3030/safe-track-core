@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Check, Loader2, Plus, Trash2 } from "lucide-react";
@@ -344,11 +344,13 @@ function TextBlock({
   disabled: boolean;
   onChange: (value: string) => void;
 }) {
+  const fieldId = useId();
   return (
     <div className="space-y-1.5">
-      <Label>{label}</Label>
+      <Label htmlFor={fieldId}>{label}</Label>
       {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
       <Textarea
+        id={fieldId}
         rows={4}
         value={value}
         disabled={disabled}

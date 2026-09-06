@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SeverityBadge, StatusBadge, TypeBadge } from "@/components/cases/CaseBadges";
 import { CaseFormDialog } from "@/components/cases/CaseFormDialog";
+import { InvestigationPanel } from "@/components/cases/InvestigationPanel";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useCase, casesQueryKey } from "@/hooks/use-cases";
 import { useSession } from "@/hooks/use-session";
@@ -119,7 +121,12 @@ function CaseDetailPage() {
             <Button onClick={() => void navigate({ to: "/casos" })}>Ir al listado</Button>
           </div>
         ) : (
-          <>
+          <Tabs defaultValue="expediente" className="space-y-4">
+            <TabsList>
+              <TabsTrigger value="expediente">Expediente</TabsTrigger>
+              <TabsTrigger value="investigacion">Investigación</TabsTrigger>
+            </TabsList>
+            <TabsContent value="expediente" className="space-y-4">
             <section className="surface-card space-y-3 p-5">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
@@ -203,7 +210,16 @@ function CaseDetailPage() {
                 </p>
               )}
             </section>
-          </>
+            </TabsContent>
+
+            <TabsContent value="investigacion">
+              <InvestigationPanel
+                caseId={caseId}
+                canManage={canManage}
+                userId={user?.id ?? null}
+              />
+            </TabsContent>
+          </Tabs>
         )}
       </div>
 
