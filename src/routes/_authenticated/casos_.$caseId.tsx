@@ -121,7 +121,12 @@ function CaseDetailPage() {
             <Button onClick={() => void navigate({ to: "/casos" })}>Ir al listado</Button>
           </div>
         ) : (
-          <>
+          <Tabs defaultValue="expediente" className="space-y-4">
+            <TabsList>
+              <TabsTrigger value="expediente">Expediente</TabsTrigger>
+              <TabsTrigger value="investigacion">Investigación</TabsTrigger>
+            </TabsList>
+            <TabsContent value="expediente" className="space-y-4">
             <section className="surface-card space-y-3 p-5">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
