@@ -210,7 +210,16 @@ function CaseDetailPage() {
                 </p>
               )}
             </section>
-          </>
+            </TabsContent>
+
+            <TabsContent value="investigacion">
+              <InvestigationPanel
+                caseId={caseId}
+                canManage={canManage}
+                userId={user?.id ?? null}
+              />
+            </TabsContent>
+          </Tabs>
         )}
       </div>
 
