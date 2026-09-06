@@ -225,9 +225,12 @@ export type Database = {
           case_id: string
           created_at: string
           created_by: string | null
+          deleted_at: string | null
+          deleted_by: string | null
           description: string | null
           file_name: string | null
           file_path: string
+          file_size: number | null
           id: string
           mime_type: string | null
           updated_at: string
@@ -236,9 +239,12 @@ export type Database = {
           case_id: string
           created_at?: string
           created_by?: string | null
+          deleted_at?: string | null
+          deleted_by?: string | null
           description?: string | null
           file_name?: string | null
           file_path: string
+          file_size?: number | null
           id?: string
           mime_type?: string | null
           updated_at?: string
@@ -247,9 +253,12 @@ export type Database = {
           case_id?: string
           created_at?: string
           created_by?: string | null
+          deleted_at?: string | null
+          deleted_by?: string | null
           description?: string | null
           file_name?: string | null
           file_path?: string
+          file_size?: number | null
           id?: string
           mime_type?: string | null
           updated_at?: string
@@ -260,6 +269,13 @@ export type Database = {
             columns: ["case_id"]
             isOneToOne: false
             referencedRelation: "cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "case_evidences_deleted_by_fkey"
+            columns: ["deleted_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -973,6 +989,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      case_in_my_org: { Args: { _case_id: string }; Returns: boolean }
+      current_org_id: { Args: never; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
