@@ -12,3 +12,12 @@
 - [ ] Fase 4b · Análisis causal (pendiente)
 - [ ] Fase 5 · Planes de acción (pendiente)
 - [ ] Fase 6 · MIPER, capacitaciones, reportes
+
+## Próximas fases (prompts 6–12)
+- [ ] 6 Análisis causal (inmediatas, básicas, organizacionales, raíz, 5 Porqués, historial)
+- [ ] 7 Plan de acción (estados, vencimientos, filtros, dashboard)
+- [ ] 8 Verificación de eficacia
+- [ ] 9 MIPER configurable 5x5 con historial
+- [ ] 10 Capacitaciones
+- [ ] 11 Cierre del caso
+- [ ] 12 Dashboard definitivo
