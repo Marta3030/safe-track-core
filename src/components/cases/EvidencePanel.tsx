@@ -58,7 +58,7 @@ export function EvidencePanel({ caseId, orgId, canManage, userId }: Props) {
         const path = buildEvidencePath(orgId, caseId, file.name);
         const { error: upErr } = await supabase.storage
           .from(EVIDENCE_BUCKET)
-          .upload(path, file, { contentType: file.type || undefined, upsert: false });
+          .upload(path, file, { contentType: file.type || "application/octet-stream", upsert: false });
         if (upErr) throw upErr;
         const { error: insErr } = await supabase.from("case_evidences").insert({
           case_id: caseId,
@@ -103,7 +103,10 @@ export function EvidencePanel({ caseId, orgId, canManage, userId }: Props) {
     const { data: s, error: e } = await supabase.storage
       .from(EVIDENCE_BUCKET)
       .createSignedUrl(row.file_path, 120, download ? { download: row.file_name ?? true } : undefined);
-    if (e || !s) return toast.error("No tienes acceso a este archivo o ya no existe.");
+    if (e || !s) {
+      toast.error("No tienes acceso a este archivo o ya no existe.");
+      return;
+    }
     window.open(s.signedUrl, "_blank", "noopener");
   }
 
