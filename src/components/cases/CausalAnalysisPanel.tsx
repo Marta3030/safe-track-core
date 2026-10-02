@@ -429,9 +429,9 @@ function describe(h: HistoryRow): string {
   const op = h.operation === "INSERT" ? "Creó" : h.operation === "DELETE" ? "Eliminó" : "Modificó";
   const data = (h.new_data ?? h.old_data) as Record<string, unknown> | null;
   if (h.entity === "conclusion") return "Confirmó la conclusión de causa raíz";
-  if (h.entity === "five_whys") return `${op} análisis 5 Porqués: ${String(data?.problem ?? "")}`;
-  const t = TYPE_LABEL[data?.cause_type as CauseType] ?? "causa";
-  return `${op} ${t.toLowerCase().replace(/s$/, "").replace(/es$/, "")}: ${String(data?.description ?? "")}`;
+  if (h.entity === "five_whys") return `${op} análisis 5 Porqués: ${String(data?.['problem'] ?? "")}`;
+  const t = TYPE_LABEL[data?.['cause_type'] as CauseType] ?? "causa";
+  return `${op} ${t.toLowerCase().replace(/s$/, "").replace(/es$/, "")}: ${String(data?.['description'] ?? "")}`;
 }
 
 function HistorySection({ invId }: { invId: string }) {
