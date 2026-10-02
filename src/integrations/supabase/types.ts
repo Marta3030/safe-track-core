@@ -100,6 +100,7 @@ export type Database = {
       actions: {
         Row: {
           action_plan_id: string
+          cause_id: string | null
           completed_at: string | null
           control_type: Database["public"]["Enums"]["control_type"]
           created_at: string
@@ -119,6 +120,7 @@ export type Database = {
         }
         Insert: {
           action_plan_id: string
+          cause_id?: string | null
           completed_at?: string | null
           control_type?: Database["public"]["Enums"]["control_type"]
           created_at?: string
@@ -138,6 +140,7 @@ export type Database = {
         }
         Update: {
           action_plan_id?: string
+          cause_id?: string | null
           completed_at?: string | null
           control_type?: Database["public"]["Enums"]["control_type"]
           created_at?: string
@@ -161,6 +164,13 @@ export type Database = {
             columns: ["action_plan_id"]
             isOneToOne: false
             referencedRelation: "action_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "actions_cause_id_fkey"
+            columns: ["cause_id"]
+            isOneToOne: false
+            referencedRelation: "investigation_causes"
             referencedColumns: ["id"]
           },
           {
@@ -410,6 +420,50 @@ export type Database = {
           },
         ]
       }
+      causal_analysis_history: {
+        Row: {
+          changed_at: string
+          changed_by: string | null
+          entity: string
+          entity_id: string | null
+          id: string
+          investigation_id: string
+          new_data: Json | null
+          old_data: Json | null
+          operation: string
+        }
+        Insert: {
+          changed_at?: string
+          changed_by?: string | null
+          entity: string
+          entity_id?: string | null
+          id?: string
+          investigation_id: string
+          new_data?: Json | null
+          old_data?: Json | null
+          operation: string
+        }
+        Update: {
+          changed_at?: string
+          changed_by?: string | null
+          entity?: string
+          entity_id?: string | null
+          id?: string
+          investigation_id?: string
+          new_data?: Json | null
+          old_data?: Json | null
+          operation?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "causal_analysis_history_investigation_id_fkey"
+            columns: ["investigation_id"]
+            isOneToOne: false
+            referencedRelation: "investigations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hazards: {
         Row: {
           activity: string
@@ -545,7 +599,9 @@ export type Database = {
           description: string
           id: string
           investigation_id: string
+          requires_action: boolean
           updated_at: string
+          why_analysis_id: string | null
         }
         Insert: {
           category?: string | null
@@ -555,7 +611,9 @@ export type Database = {
           description: string
           id?: string
           investigation_id: string
+          requires_action?: boolean
           updated_at?: string
+          why_analysis_id?: string | null
         }
         Update: {
           category?: string | null
@@ -565,7 +623,9 @@ export type Database = {
           description?: string
           id?: string
           investigation_id?: string
+          requires_action?: boolean
           updated_at?: string
+          why_analysis_id?: string | null
         }
         Relationships: [
           {
@@ -573,6 +633,13 @@ export type Database = {
             columns: ["investigation_id"]
             isOneToOne: false
             referencedRelation: "investigations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "investigation_causes_why_fk"
+            columns: ["why_analysis_id"]
+            isOneToOne: false
+            referencedRelation: "investigation_why_analyses"
             referencedColumns: ["id"]
           },
         ]
@@ -627,6 +694,44 @@ export type Database = {
           },
         ]
       }
+      investigation_why_analyses: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          investigation_id: string
+          problem: string
+          updated_at: string
+          whys: Json
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          investigation_id: string
+          problem: string
+          updated_at?: string
+          whys?: Json
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          investigation_id?: string
+          problem?: string
+          updated_at?: string
+          whys?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "investigation_why_analyses_investigation_id_fkey"
+            columns: ["investigation_id"]
+            isOneToOne: false
+            referencedRelation: "investigations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       investigations: {
         Row: {
           case_id: string
@@ -645,6 +750,9 @@ export type Database = {
           observations: string | null
           prior_training: string | null
           procedures_review: string | null
+          root_cause_conclusion: string | null
+          root_cause_confirmed_at: string | null
+          root_cause_confirmed_by: string | null
           started_at: string
           team: string | null
           updated_at: string
@@ -666,6 +774,9 @@ export type Database = {
           observations?: string | null
           prior_training?: string | null
           procedures_review?: string | null
+          root_cause_conclusion?: string | null
+          root_cause_confirmed_at?: string | null
+          root_cause_confirmed_by?: string | null
           started_at?: string
           team?: string | null
           updated_at?: string
@@ -687,6 +798,9 @@ export type Database = {
           observations?: string | null
           prior_training?: string | null
           procedures_review?: string | null
+          root_cause_conclusion?: string | null
+          root_cause_confirmed_at?: string | null
+          root_cause_confirmed_by?: string | null
           started_at?: string
           team?: string | null
           updated_at?: string
@@ -702,6 +816,13 @@ export type Database = {
           {
             foreignKeyName: "investigations_lead_investigator_id_fkey"
             columns: ["lead_investigator_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "investigations_root_cause_confirmed_by_fkey"
+            columns: ["root_cause_confirmed_by"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
@@ -989,6 +1110,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_edit_investigation: { Args: { _inv: string }; Returns: boolean }
       case_in_my_org: { Args: { _case_id: string }; Returns: boolean }
       current_org_id: { Args: never; Returns: string }
       has_role: {
@@ -998,6 +1120,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      investigation_in_my_org: { Args: { _inv: string }; Returns: boolean }
       is_hse_manager: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
@@ -1024,7 +1147,7 @@ export type Database = {
         | "cuasi_accidente"
         | "enfermedad_profesional"
         | "condicion_insegura"
-      cause_type: "inmediata" | "basica" | "raiz"
+      cause_type: "inmediata" | "basica" | "raiz" | "organizacional"
       control_type:
         | "eliminacion"
         | "sustitucion"
@@ -1187,7 +1310,7 @@ export const Constants = {
         "enfermedad_profesional",
         "condicion_insegura",
       ],
-      cause_type: ["inmediata", "basica", "raiz"],
+      cause_type: ["inmediata", "basica", "raiz", "organizacional"],
       control_type: [
         "eliminacion",
         "sustitucion",
