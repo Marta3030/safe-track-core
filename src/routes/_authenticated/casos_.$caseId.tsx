@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { SeverityBadge, StatusBadge, TypeBadge } from "@/components/cases/CaseBadges";
 import { CaseFormDialog } from "@/components/cases/CaseFormDialog";
 import { InvestigationPanel } from "@/components/cases/InvestigationPanel";
+import { CausalAnalysisPanel } from "@/components/cases/CausalAnalysisPanel";
 import { EvidencePanel } from "@/components/cases/EvidencePanel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
@@ -126,6 +127,7 @@ function CaseDetailPage() {
             <TabsList>
               <TabsTrigger value="expediente">Expediente</TabsTrigger>
               <TabsTrigger value="investigacion">Investigación</TabsTrigger>
+              <TabsTrigger value="causas">Análisis causal</TabsTrigger>
               <TabsTrigger value="evidencias">Evidencias</TabsTrigger>
             </TabsList>
             <TabsContent value="expediente" className="space-y-4">
@@ -220,6 +222,10 @@ function CaseDetailPage() {
                 canManage={canManage}
                 userId={user?.id ?? null}
               />
+            </TabsContent>
+
+            <TabsContent value="causas">
+              <CausalAnalysisPanel caseId={caseId} canManage={canManage} userId={user?.id ?? null} />
             </TabsContent>
 
             <TabsContent value="evidencias">
