@@ -12,7 +12,7 @@ type Cause = { cause_type: string; description: string };
 
 function buildBackground(inv: InvestigationRow): string {
   const parts: [string, string | null | undefined][] = [
-    ["Resumen de los hechos", (inv as Record<string, unknown>).summary as string | null],
+    ["Resumen de los hechos", (inv as Record<string, unknown>)["summary"] as string | null],
     ["Secuencia del evento", inv.event_sequence],
     ["Condiciones", inv.conditions_description],
     ["Equipos", inv.equipment_involved],

@@ -59,7 +59,7 @@ export const suggestCausalRelations = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => InputSchema.parse(d))
   .handler(async ({ data }): Promise<CausalSuggestion> => {
-    const key = process.env.LOVABLE_API_KEY;
+    const key = process.env["LOVABLE_API_KEY"];
     if (!key) throw new Error("El servicio de IA no está configurado.");
     if (!data.background.trim() && data.causes.length === 0) {
       throw new Error("Ingresa antecedentes o causas antes de pedir sugerencias.");
