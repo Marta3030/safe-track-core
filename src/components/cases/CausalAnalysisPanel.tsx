@@ -19,6 +19,7 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 import { useInvestigation, investigationQueryKey } from "@/hooks/use-investigation";
 import { formatDateTime } from "@/lib/cases";
+import { AiCausalAssistant } from "./AiCausalAssistant";
 
 type CauseType = Database["public"]["Enums"]["cause_type"];
 type CauseRow = Database["public"]["Tables"]["investigation_causes"]["Row"];
@@ -49,6 +50,7 @@ export function CausalAnalysisPanel({ caseId, canManage, userId }: Props) {
   return (
     <div className="space-y-4">
       <CausesSection invId={investigation.id} canManage={canManage} userId={userId} />
+      {canManage && <AiSection investigation={investigation} />}
       <WhysSection invId={investigation.id} canManage={canManage} userId={userId} />
       <ConclusionSection
         caseId={caseId}
@@ -61,6 +63,11 @@ export function CausalAnalysisPanel({ caseId, canManage, userId }: Props) {
       <HistorySection invId={investigation.id} />
     </div>
   );
+}
+
+function AiSection({ investigation }: { investigation: NonNullable<ReturnType<typeof useInvestigation>["data"]> }) {
+  const { data: causes = [] } = useCauses(investigation.id);
+  return <AiCausalAssistant investigation={investigation} causes={causes} />;
 }
 
 const causesKey = (id: string) => ["causes", id] as const;
