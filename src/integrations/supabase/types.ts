@@ -99,6 +99,7 @@ export type Database = {
       }
       actions: {
         Row: {
+          action_kind: string
           action_plan_id: string
           cause_id: string | null
           completed_at: string | null
@@ -107,6 +108,7 @@ export type Database = {
           created_by: string | null
           description: string
           due_date: string | null
+          evidence_name: string | null
           evidence_path: string | null
           id: string
           priority: Database["public"]["Enums"]["priority_level"]
@@ -119,6 +121,7 @@ export type Database = {
           verified_by: string | null
         }
         Insert: {
+          action_kind?: string
           action_plan_id: string
           cause_id?: string | null
           completed_at?: string | null
@@ -127,6 +130,7 @@ export type Database = {
           created_by?: string | null
           description: string
           due_date?: string | null
+          evidence_name?: string | null
           evidence_path?: string | null
           id?: string
           priority?: Database["public"]["Enums"]["priority_level"]
@@ -139,6 +143,7 @@ export type Database = {
           verified_by?: string | null
         }
         Update: {
+          action_kind?: string
           action_plan_id?: string
           cause_id?: string | null
           completed_at?: string | null
@@ -147,6 +152,7 @@ export type Database = {
           created_by?: string | null
           description?: string
           due_date?: string | null
+          evidence_name?: string | null
           evidence_path?: string | null
           id?: string
           priority?: Database["public"]["Enums"]["priority_level"]
@@ -1122,6 +1128,7 @@ export type Database = {
       }
       investigation_in_my_org: { Args: { _inv: string }; Returns: boolean }
       is_hse_manager: { Args: { _user_id: string }; Returns: boolean }
+      refresh_overdue_actions: { Args: never; Returns: number }
     }
     Enums: {
       action_status:
@@ -1131,6 +1138,10 @@ export type Database = {
         | "verificada"
         | "vencida"
         | "cancelada"
+        | "evidencia_cargada"
+        | "en_verificacion"
+        | "eficaz"
+        | "cerrada"
       app_role: "administrador" | "prevencionista" | "supervisor" | "auditor"
       case_severity: "leve" | "moderada" | "grave" | "fatal"
       case_status:
@@ -1291,6 +1302,10 @@ export const Constants = {
         "verificada",
         "vencida",
         "cancelada",
+        "evidencia_cargada",
+        "en_verificacion",
+        "eficaz",
+        "cerrada",
       ],
       app_role: ["administrador", "prevencionista", "supervisor", "auditor"],
       case_severity: ["leve", "moderada", "grave", "fatal"],
