@@ -11,6 +11,7 @@ import { CaseFormDialog } from "@/components/cases/CaseFormDialog";
 import { InvestigationPanel } from "@/components/cases/InvestigationPanel";
 import { CausalAnalysisPanel } from "@/components/cases/CausalAnalysisPanel";
 import { EvidencePanel } from "@/components/cases/EvidencePanel";
+import { ActionsBoard } from "@/components/actions/ActionsBoard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useCase, casesQueryKey } from "@/hooks/use-cases";
@@ -128,6 +129,7 @@ function CaseDetailPage() {
               <TabsTrigger value="expediente">Expediente</TabsTrigger>
               <TabsTrigger value="investigacion">Investigación</TabsTrigger>
               <TabsTrigger value="causas">Análisis causal</TabsTrigger>
+              <TabsTrigger value="acciones">Plan de acción</TabsTrigger>
               <TabsTrigger value="evidencias">Evidencias</TabsTrigger>
             </TabsList>
             <TabsContent value="expediente" className="space-y-4">
@@ -226,6 +228,10 @@ function CaseDetailPage() {
 
             <TabsContent value="causas">
               <CausalAnalysisPanel caseId={caseId} canManage={canManage} userId={user?.id ?? null} />
+            </TabsContent>
+
+            <TabsContent value="acciones">
+              <ActionsBoard caseId={caseId} canManage={canManageCases(role)} userId={user?.id ?? null} />
             </TabsContent>
 
             <TabsContent value="evidencias">
