@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ClipboardCheck } from "lucide-react";
 import { ModulePage } from "@/components/layout/ModulePage";
-import { ModulePlaceholder } from "@/components/layout/ModulePlaceholder";
+import { ActionsBoard } from "@/components/actions/ActionsBoard";
+import { useSession } from "@/hooks/use-session";
+import { canManageCases } from "@/lib/roles";
 
 export const Route = createFileRoute("/_authenticated/planes-accion")({
   head: () => ({
@@ -17,29 +18,18 @@ export const Route = createFileRoute("/_authenticated/planes-accion")({
         property: "og:description",
         content: "Seguimiento de acciones, vencimientos y verificación de eficacia.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: ActionsPage,
 });
 
 function ActionsPage() {
+  const { role, user } = useSession();
   return (
-    <ModulePage
-      title="Planes de Acción"
-      subtitle="Acciones inmediatas, correctivas y preventivas"
-    >
-      <ModulePlaceholder
-        icon={ClipboardCheck}
-        phase="Fases 6 y 7"
-        description="Acciones derivadas de las causas identificadas, con control de vencimientos y verificación de eficacia por el prevencionista."
-        scope={[
-          "Creación de acciones desde cualquier causa del análisis causal",
-          "Jerarquía de control, prioridad, responsable y fecha compromiso",
-          "Estados: pendiente, en proceso, evidencia cargada, en verificación, eficaz, cerrada, vencida",
-          "Semáforo de vencimientos y marcado automático de acciones vencidas",
-          "Verificación de eficacia con generación de nueva acción si el resultado es no eficaz",
-        ]}
-      />
+    <ModulePage title="Planes de Acción" subtitle="Acciones inmediatas, correctivas y preventivas">
+      <ActionsBoard canManage={canManageCases(role)} userId={user?.id ?? null} />
     </ModulePage>
   );
 }
