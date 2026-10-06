@@ -60,7 +60,7 @@ import { formatDate } from "@/lib/cases";
 import { EVIDENCE_ACCEPT, EVIDENCE_BUCKET, buildEvidencePath, validateEvidenceFile } from "@/lib/evidences";
 
 type Props = {
-  caseId?: string;
+  caseId?: string | undefined;
   canManage: boolean; // prevención / administración
   userId: string | null;
 };
@@ -278,7 +278,7 @@ function ActionItem({
   const viewEvidence = async () => {
     if (!a.evidence_path) return;
     const { data, error } = await supabase.storage.from(EVIDENCE_BUCKET).createSignedUrl(a.evidence_path, 120);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     window.open(data.signedUrl, "_blank", "noopener");
   };
 
@@ -411,7 +411,7 @@ function CreateActionDialog({
 }: {
   open: boolean;
   onOpenChange: (o: boolean) => void;
-  caseId?: string;
+  caseId?: string | undefined;
   userId: string | null;
 }) {
   const qc = useQueryClient();
