@@ -97,6 +97,79 @@ export type Database = {
           },
         ]
       }
+      action_verifications: {
+        Row: {
+          action_id: string
+          action_implemented: boolean
+          control_implemented: boolean
+          created_at: string
+          evidence_reviewed: boolean
+          follow_up_action_id: string | null
+          id: string
+          new_status: Database["public"]["Enums"]["action_status"] | null
+          observations: string | null
+          previous_status: Database["public"]["Enums"]["action_status"] | null
+          result: string
+          risk_controlled: boolean
+          verified_on: string
+          verifier_id: string
+        }
+        Insert: {
+          action_id: string
+          action_implemented: boolean
+          control_implemented: boolean
+          created_at?: string
+          evidence_reviewed: boolean
+          follow_up_action_id?: string | null
+          id?: string
+          new_status?: Database["public"]["Enums"]["action_status"] | null
+          observations?: string | null
+          previous_status?: Database["public"]["Enums"]["action_status"] | null
+          result: string
+          risk_controlled: boolean
+          verified_on?: string
+          verifier_id: string
+        }
+        Update: {
+          action_id?: string
+          action_implemented?: boolean
+          control_implemented?: boolean
+          created_at?: string
+          evidence_reviewed?: boolean
+          follow_up_action_id?: string | null
+          id?: string
+          new_status?: Database["public"]["Enums"]["action_status"] | null
+          observations?: string | null
+          previous_status?: Database["public"]["Enums"]["action_status"] | null
+          result?: string
+          risk_controlled?: boolean
+          verified_on?: string
+          verifier_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "action_verifications_action_id_fkey"
+            columns: ["action_id"]
+            isOneToOne: false
+            referencedRelation: "actions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "action_verifications_follow_up_action_id_fkey"
+            columns: ["follow_up_action_id"]
+            isOneToOne: false
+            referencedRelation: "actions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "action_verifications_verifier_id_fkey"
+            columns: ["verifier_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       actions: {
         Row: {
           action_kind: string
@@ -111,6 +184,7 @@ export type Database = {
           evidence_name: string | null
           evidence_path: string | null
           id: string
+          parent_action_id: string | null
           priority: Database["public"]["Enums"]["priority_level"]
           progress_notes: string | null
           responsible_id: string | null
@@ -133,6 +207,7 @@ export type Database = {
           evidence_name?: string | null
           evidence_path?: string | null
           id?: string
+          parent_action_id?: string | null
           priority?: Database["public"]["Enums"]["priority_level"]
           progress_notes?: string | null
           responsible_id?: string | null
@@ -155,6 +230,7 @@ export type Database = {
           evidence_name?: string | null
           evidence_path?: string | null
           id?: string
+          parent_action_id?: string | null
           priority?: Database["public"]["Enums"]["priority_level"]
           progress_notes?: string | null
           responsible_id?: string | null
@@ -177,6 +253,13 @@ export type Database = {
             columns: ["cause_id"]
             isOneToOne: false
             referencedRelation: "investigation_causes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "actions_parent_action_id_fkey"
+            columns: ["parent_action_id"]
+            isOneToOne: false
+            referencedRelation: "actions"
             referencedColumns: ["id"]
           },
           {
@@ -1129,6 +1212,22 @@ export type Database = {
       investigation_in_my_org: { Args: { _inv: string }; Returns: boolean }
       is_hse_manager: { Args: { _user_id: string }; Returns: boolean }
       refresh_overdue_actions: { Args: never; Returns: number }
+      verify_action: {
+        Args: {
+          _action_id: string
+          _action_implemented: boolean
+          _control_implemented: boolean
+          _evidence_reviewed: boolean
+          _new_description?: string
+          _new_due?: string
+          _new_responsible?: string
+          _observations: string
+          _result: string
+          _risk_controlled: boolean
+          _verified_on: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       action_status:

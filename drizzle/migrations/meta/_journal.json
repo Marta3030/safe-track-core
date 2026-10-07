@@ -15,6 +15,13 @@
       "when": 1791226420775,
       "tag": "0001_action_plan_states",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791373469889,
+      "tag": "0002_action_verifications",
+      "breakpoints": true
     }
   ]
 }
