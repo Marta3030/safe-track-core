@@ -75,7 +75,7 @@ export function VerificationDialog({
         _result: result,
         _observations: obs,
         _verified_on: date,
-        ...(linked ? { _new_description: newDesc, _new_responsible: newResp || undefined, _new_due: newDue } : {}),
+        ...(linked ? { _new_description: newDesc, ...(newResp ? { _new_responsible: newResp } : {}), _new_due: newDue } : {}),
       });
       if (error) throw error;
       return linked;
