@@ -58,6 +58,7 @@ import {
 } from "@/lib/actions";
 import { formatDate } from "@/lib/cases";
 import { EVIDENCE_ACCEPT, EVIDENCE_BUCKET, buildEvidencePath, validateEvidenceFile } from "@/lib/evidences";
+import { VerificationDialog, VerificationHistory } from "@/components/actions/VerificationDialog";
 
 type Props = {
   caseId?: string | undefined;
@@ -234,7 +235,7 @@ function ActionItem({
 }) {
   const qc = useQueryClient();
   const fileRef = useRef<HTMLInputElement>(null);
-  const [notes, setNotes] = useState("");
+  const [verifyOpen, setVerifyOpen] = useState(false);
   const isResponsible = userId && a.responsible_id === userId;
   const canWork = canManage || Boolean(isResponsible);
   const caseRow = a.action_plans?.cases;
@@ -354,40 +355,30 @@ function ActionItem({
             </Button>
           </>
         )}
-        {canManage && eff === "en_verificacion" && (
-          <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
-            <Input
-              aria-label="Notas de verificación"
-              placeholder="Notas de verificación de eficacia"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-            />
-            <Button
-              size="sm"
-              disabled={update.isPending}
-              onClick={() => update.mutate({ status: "eficaz", verification_notes: notes || null })}
-            >
-              <CheckCircle2 className="mr-2 h-4 w-4" /> Eficaz
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              disabled={update.isPending || !notes.trim()}
-              title="Indica el motivo en las notas"
-              onClick={() =>
-                update.mutate({ status: "en_progreso", verification_notes: `No eficaz: ${notes}`, evidence_path: null, evidence_name: null })
-              }
-            >
-              No eficaz
-            </Button>
-          </div>
+        {canManage && (eff === "en_verificacion" || eff === "evidencia_cargada") && (
+          <Button size="sm" onClick={() => setVerifyOpen(true)}>
+            <ShieldCheck className="mr-2 h-4 w-4" /> Verificar eficacia
+          </Button>
         )}
         {canManage && eff === "eficaz" && (
           <Button size="sm" variant="outline" disabled={update.isPending} onClick={() => update.mutate({ status: "cerrada" })}>
-            Cerrar acción
+            <CheckCircle2 className="mr-2 h-4 w-4" /> Cerrar acción
           </Button>
         )}
+        {(a.verified_at || a.parent_action_id) && <VerificationHistory actionId={a.id} />}
       </div>
+      {a.parent_action_id && (
+        <p className="text-xs text-muted-foreground">Acción de seguimiento creada tras una verificación "No eficaz".</p>
+      )}
+      {canManage && (
+        <VerificationDialog
+          open={verifyOpen}
+          onOpenChange={setVerifyOpen}
+          actionId={a.id}
+          actionDescription={a.description}
+          defaultResponsible={a.responsible_id}
+        />
+      )}
     </li>
   );
 }
