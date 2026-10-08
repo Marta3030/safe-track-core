@@ -553,6 +553,47 @@ export type Database = {
           },
         ]
       }
+      hazard_reviews: {
+        Row: {
+          changed_at: string
+          changed_by: string | null
+          hazard_id: string
+          id: string
+          new_data: Json | null
+          old_data: Json | null
+          operation: string
+          reason: string | null
+        }
+        Insert: {
+          changed_at?: string
+          changed_by?: string | null
+          hazard_id: string
+          id?: string
+          new_data?: Json | null
+          old_data?: Json | null
+          operation: string
+          reason?: string | null
+        }
+        Update: {
+          changed_at?: string
+          changed_by?: string | null
+          hazard_id?: string
+          id?: string
+          new_data?: Json | null
+          old_data?: Json | null
+          operation?: string
+          reason?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hazard_reviews_hazard_id_fkey"
+            columns: ["hazard_id"]
+            isOneToOne: false
+            referencedRelation: "hazards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hazards: {
         Row: {
           activity: string
@@ -567,19 +608,28 @@ export type Database = {
           is_routine: boolean
           last_reviewed_at: string | null
           legal_requirements: string | null
+          matrix_id: string | null
           next_review_at: string | null
           organization_id: string
           owner_id: string | null
+          post_consequence: number | null
+          post_probability: number | null
+          post_risk_level: Database["public"]["Enums"]["risk_level"] | null
+          post_risk_level_label: string | null
           probability: number
           process: string | null
           proposed_controls: string | null
           residual_consequence: number | null
           residual_probability: number | null
           residual_risk_level: Database["public"]["Enums"]["risk_level"] | null
+          residual_risk_level_label: string | null
+          review_reason: string | null
           risk: string
           risk_level: Database["public"]["Enums"]["risk_level"]
+          risk_level_label: string | null
           risk_score: number | null
           source_case_id: string | null
+          task: string | null
           updated_at: string
           work_center_id: string | null
         }
@@ -596,19 +646,28 @@ export type Database = {
           is_routine?: boolean
           last_reviewed_at?: string | null
           legal_requirements?: string | null
+          matrix_id?: string | null
           next_review_at?: string | null
           organization_id: string
           owner_id?: string | null
+          post_consequence?: number | null
+          post_probability?: number | null
+          post_risk_level?: Database["public"]["Enums"]["risk_level"] | null
+          post_risk_level_label?: string | null
           probability?: number
           process?: string | null
           proposed_controls?: string | null
           residual_consequence?: number | null
           residual_probability?: number | null
           residual_risk_level?: Database["public"]["Enums"]["risk_level"] | null
+          residual_risk_level_label?: string | null
+          review_reason?: string | null
           risk: string
           risk_level?: Database["public"]["Enums"]["risk_level"]
+          risk_level_label?: string | null
           risk_score?: number | null
           source_case_id?: string | null
+          task?: string | null
           updated_at?: string
           work_center_id?: string | null
         }
@@ -625,19 +684,28 @@ export type Database = {
           is_routine?: boolean
           last_reviewed_at?: string | null
           legal_requirements?: string | null
+          matrix_id?: string | null
           next_review_at?: string | null
           organization_id?: string
           owner_id?: string | null
+          post_consequence?: number | null
+          post_probability?: number | null
+          post_risk_level?: Database["public"]["Enums"]["risk_level"] | null
+          post_risk_level_label?: string | null
           probability?: number
           process?: string | null
           proposed_controls?: string | null
           residual_consequence?: number | null
           residual_probability?: number | null
           residual_risk_level?: Database["public"]["Enums"]["risk_level"] | null
+          residual_risk_level_label?: string | null
+          review_reason?: string | null
           risk?: string
           risk_level?: Database["public"]["Enums"]["risk_level"]
+          risk_level_label?: string | null
           risk_score?: number | null
           source_case_id?: string | null
+          task?: string | null
           updated_at?: string
           work_center_id?: string | null
         }
@@ -647,6 +715,13 @@ export type Database = {
             columns: ["area_id"]
             isOneToOne: false
             referencedRelation: "areas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hazards_matrix_id_fkey"
+            columns: ["matrix_id"]
+            isOneToOne: false
+            referencedRelation: "risk_matrices"
             referencedColumns: ["id"]
           },
           {
@@ -992,6 +1067,56 @@ export type Database = {
           },
         ]
       }
+      risk_matrices: {
+        Row: {
+          consequence_labels: Json
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          is_default: boolean
+          levels: Json
+          name: string
+          organization_id: string
+          probability_labels: Json
+          updated_at: string
+        }
+        Insert: {
+          consequence_labels: Json
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_default?: boolean
+          levels: Json
+          name: string
+          organization_id: string
+          probability_labels: Json
+          updated_at?: string
+        }
+        Update: {
+          consequence_labels?: Json
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_default?: boolean
+          levels?: Json
+          name?: string
+          organization_id?: string
+          probability_labels?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "risk_matrices_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       training_attendees: {
         Row: {
           attended: boolean
@@ -1211,6 +1336,10 @@ export type Database = {
       }
       investigation_in_my_org: { Args: { _inv: string }; Returns: boolean }
       is_hse_manager: { Args: { _user_id: string }; Returns: boolean }
+      matrix_level: {
+        Args: { _levels: Json; _score: number }
+        Returns: Record<string, unknown>
+      }
       refresh_overdue_actions: { Args: never; Returns: number }
       verify_action: {
         Args: {

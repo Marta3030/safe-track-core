@@ -12,6 +12,7 @@ import { InvestigationPanel } from "@/components/cases/InvestigationPanel";
 import { CausalAnalysisPanel } from "@/components/cases/CausalAnalysisPanel";
 import { EvidencePanel } from "@/components/cases/EvidencePanel";
 import { ActionsBoard } from "@/components/actions/ActionsBoard";
+import { MiperBoard } from "@/components/miper/MiperBoard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useCase, casesQueryKey } from "@/hooks/use-cases";
@@ -130,6 +131,7 @@ function CaseDetailPage() {
               <TabsTrigger value="investigacion">Investigación</TabsTrigger>
               <TabsTrigger value="causas">Análisis causal</TabsTrigger>
               <TabsTrigger value="acciones">Plan de acción</TabsTrigger>
+              <TabsTrigger value="miper">MIPER</TabsTrigger>
               <TabsTrigger value="evidencias">Evidencias</TabsTrigger>
             </TabsList>
             <TabsContent value="expediente" className="space-y-4">
@@ -232,6 +234,10 @@ function CaseDetailPage() {
 
             <TabsContent value="acciones">
               <ActionsBoard caseId={caseId} canManage={canManageCases(role)} userId={user?.id ?? null} />
+            </TabsContent>
+
+            <TabsContent value="miper">
+              <MiperBoard caseId={caseId} canManage={canManageCases(role)} userId={user?.id ?? null} orgId={data.organization_id ?? null} />
             </TabsContent>
 
             <TabsContent value="evidencias">

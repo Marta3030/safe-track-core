@@ -17,7 +17,7 @@
 - [ ] 6 Análisis causal (inmediatas, básicas, organizacionales, raíz, 5 Porqués, historial)
 - [x] 7 Plan de acción (estados, vencimientos, filtros, dashboard)
 - [x] 8 Verificación de eficacia
-- [ ] 9 MIPER configurable 5x5 con historial
+- [x] 9 MIPER configurable 5x5 con historial
 - [ ] 10 Capacitaciones
 - [ ] 11 Cierre del caso
 - [ ] 12 Dashboard definitivo
