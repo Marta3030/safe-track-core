@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Grid3x3 } from "lucide-react";
 import { ModulePage } from "@/components/layout/ModulePage";
-import { ModulePlaceholder } from "@/components/layout/ModulePlaceholder";
+import { MiperBoard } from "@/components/miper/MiperBoard";
+import { useSession } from "@/hooks/use-session";
+import { canManageCases } from "@/lib/roles";
 
 export const Route = createFileRoute("/_authenticated/miper")({
   head: () => ({
@@ -9,37 +10,22 @@ export const Route = createFileRoute("/_authenticated/miper")({
       { title: "MIPER | Safety360 HSEQ" },
       {
         name: "description",
-        content:
-          "Matriz de identificación de peligros y evaluación de riesgos con metodología configurable.",
+        content: "Matriz de identificación de peligros y evaluación de riesgos con metodología configurable.",
       },
       { property: "og:title", content: "MIPER | Safety360 HSEQ" },
-      {
-        property: "og:description",
-        content: "Identificación de peligros, evaluación de riesgos y riesgo residual.",
-      },
+      { property: "og:description", content: "Identificación de peligros, evaluación de riesgos y riesgo residual." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: MiperPage,
 });
 
 function MiperPage() {
+  const { role, user, profile } = useSession();
   return (
-    <ModulePage
-      title="MIPER"
-      subtitle="Matriz de identificación de peligros y evaluación de riesgos"
-    >
-      <ModulePlaceholder
-        icon={Grid3x3}
-        phase="Fase 8"
-        description="Matriz por proceso, actividad y tarea, con metodología de evaluación configurable (matriz 5x5 por defecto)."
-        scope={[
-          "Peligro, riesgo, personas expuestas y controles existentes",
-          "Probabilidad, consecuencia y nivel de riesgo según metodología configurable",
-          "Medidas adicionales, responsable y fecha de revisión",
-          "Vinculación directa entre un accidente y la fila MIPER correspondiente",
-          "Comparación de evaluación anterior, posterior y riesgo residual",
-        ]}
-      />
+    <ModulePage title="MIPER" subtitle="Matriz de identificación de peligros y evaluación de riesgos">
+      <MiperBoard canManage={canManageCases(role)} userId={user?.id ?? null} orgId={profile?.organization_id ?? null} />
     </ModulePage>
   );
 }
