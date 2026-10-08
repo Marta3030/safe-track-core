@@ -22,6 +22,13 @@
       "when": 1791373469889,
       "tag": "0002_action_verifications",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791419582276,
+      "tag": "0003_miper_configurable",
+      "breakpoints": true
     }
   ]
 }
