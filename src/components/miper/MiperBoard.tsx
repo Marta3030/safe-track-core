@@ -33,7 +33,7 @@ import {
 const ALL = "__all";
 const NONE = "__none";
 
-type Props = { caseId?: string; canManage: boolean; userId: string | null; orgId: string | null };
+type Props = { caseId?: string | undefined; canManage: boolean; userId: string | null; orgId: string | null };
 
 export function MiperBoard({ caseId, canManage, userId, orgId }: Props) {
   const matrices = useMatrices();
@@ -250,7 +250,7 @@ function ScaleSelect({ label, value, onChange, labels, optional }: { label: stri
 
 function HazardFormDialog({ open, onOpenChange, hazard, matrix, caseId, orgId, userId }: {
   open: boolean; onOpenChange: (o: boolean) => void; hazard: HazardRow | null; matrix: RiskMatrix;
-  caseId?: string; orgId: string | null; userId: string | null;
+  caseId?: string | undefined; orgId: string | null; userId: string | null;
 }) {
   const qc = useQueryClient();
   const cases = useCases();
@@ -512,7 +512,7 @@ function ReviewHistoryDialog({ hazard, onClose }: { hazard: HazardRow | null; on
                     <span className="text-muted-foreground">{formatDateTime(r.changed_at)} · {r.changed_by ? name.get(r.changed_by) ?? "—" : "—"}</span>
                   </div>
                   {r.reason && <p>Motivo: {r.reason}</p>}
-                  {r.operation === "INSERT" && <p>Nivel inicial: {String(n.risk_level_label ?? "—")} ({String(n.probability)}×{String(n.consequence)})</p>}
+                  {r.operation === "INSERT" && <p>Nivel inicial: {String(n['risk_level_label'] ?? "—")} ({String(n['probability'])}×{String(n['consequence'])})</p>}
                   {changes.map(([k, l]) => (
                     <p key={k} className="text-muted-foreground">{l}: {String(o[k] ?? "—")} → <span className="text-foreground">{String(n[k] ?? "—")}</span></p>
                   ))}
