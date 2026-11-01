@@ -1,41 +1,28 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { GraduationCap } from "lucide-react";
 import { ModulePage } from "@/components/layout/ModulePage";
-import { ModulePlaceholder } from "@/components/layout/ModulePlaceholder";
+import { TrainingsBoard } from "@/components/trainings/TrainingsBoard";
+import { useSession } from "@/hooks/use-session";
+import { canManageCases } from "@/lib/roles";
 
 export const Route = createFileRoute("/_authenticated/capacitaciones")({
   head: () => ({
     meta: [
       { title: "Capacitaciones | Safety360 HSEQ" },
-      {
-        name: "description",
-        content:
-          "Programación, ejecución y evidencia de capacitaciones asociadas a casos, acciones y riesgos MIPER.",
-      },
+      { name: "description", content: "Programación, ejecución y evidencia de capacitaciones asociadas a casos, acciones y riesgos MIPER." },
       { property: "og:title", content: "Capacitaciones | Safety360 HSEQ" },
-      {
-        property: "og:description",
-        content: "Capacitaciones vinculadas al aprendizaje derivado de los eventos.",
-      },
+      { property: "og:description", content: "Capacitaciones vinculadas al aprendizaje derivado de los eventos." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: TrainingsPage,
 });
 
 function TrainingsPage() {
+  const { role, user, profile } = useSession();
   return (
     <ModulePage title="Capacitaciones" subtitle="Programación, ejecución y evidencia">
-      <ModulePlaceholder
-        icon={GraduationCap}
-        phase="Fase 9"
-        description="Capacitaciones generadas desde las acciones del plan, con registro de asistentes y evidencia."
-        scope={[
-          "Tema, objetivo, empresa, centro, área, responsable y fecha",
-          "Estados: programada, realizada, cancelada",
-          "Registro de trabajadores asistentes",
-          "Vinculación con accidente, acción o riesgo MIPER",
-        ]}
-      />
+      <TrainingsBoard canManage={canManageCases(role)} userId={user?.id ?? null} orgId={profile?.organization_id ?? null} />
     </ModulePage>
   );
 }
