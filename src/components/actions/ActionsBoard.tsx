@@ -59,6 +59,7 @@ import {
 import { formatDate } from "@/lib/cases";
 import { EVIDENCE_ACCEPT, EVIDENCE_BUCKET, buildEvidencePath, validateEvidenceFile } from "@/lib/evidences";
 import { VerificationDialog, VerificationHistory } from "@/components/actions/VerificationDialog";
+import { TrainingFormDialog } from "@/components/trainings/TrainingsBoard";
 
 type Props = {
   caseId?: string | undefined;
@@ -236,6 +237,7 @@ function ActionItem({
   const qc = useQueryClient();
   const fileRef = useRef<HTMLInputElement>(null);
   const [verifyOpen, setVerifyOpen] = useState(false);
+  const [trainingOpen, setTrainingOpen] = useState(false);
   const isResponsible = userId && a.responsible_id === userId;
   const canWork = canManage || Boolean(isResponsible);
   const caseRow = a.action_plans?.cases;
@@ -365,10 +367,25 @@ function ActionItem({
             <CheckCircle2 className="mr-2 h-4 w-4" /> Cerrar acción
           </Button>
         )}
+        {canManage && (
+          <Button size="sm" variant="outline" onClick={() => setTrainingOpen(true)}>
+            <GraduationCap className="mr-2 h-4 w-4" /> Necesidad de capacitación
+          </Button>
+        )}
         {(a.verified_at || a.parent_action_id) && <VerificationHistory actionId={a.id} />}
       </div>
       {a.parent_action_id && (
         <p className="text-xs text-muted-foreground">Acción de seguimiento creada tras una verificación "No eficaz".</p>
+      )}
+      {canManage && a.action_plans?.organization_id && trainingOpen && (
+        <TrainingFormDialog
+          open={trainingOpen}
+          onOpenChange={setTrainingOpen}
+          training={null}
+          orgId={a.action_plans.organization_id}
+          userId={userId}
+          defaults={{ caseId: a.action_plans.case_id, actionId: a.id, title: `Capacitación: ${a.description}`.slice(0, 120) }}
+        />
       )}
       {canManage && (
         <VerificationDialog
