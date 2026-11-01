@@ -1173,15 +1173,22 @@ export type Database = {
       }
       trainings: {
         Row: {
+          action_id: string | null
           area_id: string | null
           created_at: string
           created_by: string | null
           deleted_at: string | null
           description: string | null
           duration_hours: number
+          evidence_name: string | null
+          evidence_path: string | null
+          hazard_id: string | null
           id: string
           instructor: string | null
+          is_mandatory: boolean
+          objective: string | null
           organization_id: string
+          responsible_id: string | null
           scheduled_at: string
           source_case_id: string | null
           status: Database["public"]["Enums"]["training_status"]
@@ -1191,15 +1198,22 @@ export type Database = {
           work_center_id: string | null
         }
         Insert: {
+          action_id?: string | null
           area_id?: string | null
           created_at?: string
           created_by?: string | null
           deleted_at?: string | null
           description?: string | null
           duration_hours?: number
+          evidence_name?: string | null
+          evidence_path?: string | null
+          hazard_id?: string | null
           id?: string
           instructor?: string | null
+          is_mandatory?: boolean
+          objective?: string | null
           organization_id: string
+          responsible_id?: string | null
           scheduled_at?: string
           source_case_id?: string | null
           status?: Database["public"]["Enums"]["training_status"]
@@ -1209,15 +1223,22 @@ export type Database = {
           work_center_id?: string | null
         }
         Update: {
+          action_id?: string | null
           area_id?: string | null
           created_at?: string
           created_by?: string | null
           deleted_at?: string | null
           description?: string | null
           duration_hours?: number
+          evidence_name?: string | null
+          evidence_path?: string | null
+          hazard_id?: string | null
           id?: string
           instructor?: string | null
+          is_mandatory?: boolean
+          objective?: string | null
           organization_id?: string
+          responsible_id?: string | null
           scheduled_at?: string
           source_case_id?: string | null
           status?: Database["public"]["Enums"]["training_status"]
@@ -1228,6 +1249,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "trainings_action_id_fkey"
+            columns: ["action_id"]
+            isOneToOne: false
+            referencedRelation: "actions"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "trainings_area_id_fkey"
             columns: ["area_id"]
             isOneToOne: false
@@ -1235,10 +1263,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "trainings_hazard_id_fkey"
+            columns: ["hazard_id"]
+            isOneToOne: false
+            referencedRelation: "hazards"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "trainings_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trainings_responsible_id_fkey"
+            columns: ["responsible_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
           {
