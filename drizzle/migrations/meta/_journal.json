@@ -29,6 +29,13 @@
       "when": 1791419582276,
       "tag": "0003_miper_configurable",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793539154859,
+      "tag": "0004_trainings_module",
+      "breakpoints": true
     }
   ]
 }

@@ -13,6 +13,7 @@ import { CausalAnalysisPanel } from "@/components/cases/CausalAnalysisPanel";
 import { EvidencePanel } from "@/components/cases/EvidencePanel";
 import { ActionsBoard } from "@/components/actions/ActionsBoard";
 import { MiperBoard } from "@/components/miper/MiperBoard";
+import { TrainingsBoard, useTrainings, PENDING_TRAINING } from "@/components/trainings/TrainingsBoard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useCase, casesQueryKey } from "@/hooks/use-cases";
@@ -63,11 +64,15 @@ function CaseDetailPage() {
   const { profile, user, role } = useSession();
   const { data, isLoading, isError, error } = useCase(caseId);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const trainings = useTrainings(caseId);
+  const pendingMandatory = (trainings.data ?? []).filter((t) => t.is_mandatory && PENDING_TRAINING.includes(t.status)).length;
 
   const canManage = canManageCases(role) || role === "supervisor";
 
   const changeStatus = useMutation({
     mutationFn: async (next: CaseStatus) => {
+      if (next === "cerrado" && pendingMandatory > 0)
+        throw new Error("No se puede cerrar: existe capacitación obligatoria pendiente");
       const { error: updateError } = await supabase
         .from("cases")
         .update({
@@ -126,12 +131,13 @@ function CaseDetailPage() {
           </div>
         ) : (
           <Tabs defaultValue="expediente" className="space-y-4">
-            <TabsList>
+            <TabsList className="h-auto flex-wrap">
               <TabsTrigger value="expediente">Expediente</TabsTrigger>
               <TabsTrigger value="investigacion">Investigación</TabsTrigger>
               <TabsTrigger value="causas">Análisis causal</TabsTrigger>
               <TabsTrigger value="acciones">Plan de acción</TabsTrigger>
               <TabsTrigger value="miper">MIPER</TabsTrigger>
+              <TabsTrigger value="capacitaciones">Capacitaciones</TabsTrigger>
               <TabsTrigger value="evidencias">Evidencias</TabsTrigger>
             </TabsList>
             <TabsContent value="expediente" className="space-y-4">
@@ -197,7 +203,7 @@ function CaseDetailPage() {
                       key={next}
                       size="sm"
                       variant={next === "anulado" ? "outline" : "default"}
-                      disabled={changeStatus.isPending}
+                      disabled={changeStatus.isPending || (next === "cerrado" && pendingMandatory > 0)}
                       onClick={() => changeStatus.mutate(next)}
                     >
                       {changeStatus.isPending && (
@@ -206,6 +212,11 @@ function CaseDetailPage() {
                       Pasar a {CASE_STATUS_LABELS[next]}
                     </Button>
                   ))}
+                  {CASE_STATUS_FLOW[data.status].includes("cerrado") && pendingMandatory > 0 && (
+                    <p className="w-full text-sm text-destructive">
+                      No está listo para cierre: hay {pendingMandatory} capacitación(es) obligatoria(s) pendiente(s).
+                    </p>
+                  )}
                   {CASE_STATUS_FLOW[data.status].length === 0 && (
                     <p className="text-sm text-muted-foreground">
                       No hay transiciones disponibles desde este estado.
@@ -238,6 +249,10 @@ function CaseDetailPage() {
 
             <TabsContent value="miper">
               <MiperBoard caseId={caseId} canManage={canManageCases(role)} userId={user?.id ?? null} orgId={data.organization_id ?? null} />
+            </TabsContent>
+
+            <TabsContent value="capacitaciones">
+              <TrainingsBoard caseId={caseId} canManage={canManageCases(role)} userId={user?.id ?? null} orgId={data.organization_id ?? null} />
             </TabsContent>
 
             <TabsContent value="evidencias">
