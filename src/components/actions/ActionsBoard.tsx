@@ -8,6 +8,7 @@ import {
   ClipboardList,
   Clock,
   Eye,
+  GraduationCap,
   Loader2,
   Percent,
   Plus,
