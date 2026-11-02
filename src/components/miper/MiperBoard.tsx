@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { AlertTriangle, Grid3x3, History, Loader2, Pencil, Plus, Settings2, ShieldCheck, Trash2 } from "lucide-react";
+import { GraduationCap, Wrench, AlertTriangle, Grid3x3, History, Loader2, Pencil, Plus, Settings2, ShieldCheck, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { KpiCard } from "@/components/dashboard/KpiCard";
 import { useCases } from "@/hooks/use-cases";
 import { useOrgPeople } from "@/hooks/use-actions";
+import { TrainingFormDialog } from "@/components/trainings/TrainingsBoard";
+import { CONTROL_LABELS, CONTROL_TYPES, type ControlType } from "@/lib/actions";
 import { formatDate, formatDateTime } from "@/lib/cases";
 import { cn } from "@/lib/utils";
 import {
@@ -44,6 +46,8 @@ export function MiperBoard({ caseId, canManage, userId, orgId }: Props) {
   const [formOpen, setFormOpen] = useState(false);
   const [configOpen, setConfigOpen] = useState(false);
   const [historyFor, setHistoryFor] = useState<HazardRow | null>(null);
+  const [actionFor, setActionFor] = useState<HazardRow | null>(null);
+  const [trainingFor, setTrainingFor] = useState<HazardRow | null>(null);
 
   const matrix = matrices.data?.find((m) => m.is_default) ?? matrices.data?.[0];
   const matrixById = (id: string | null) => matrices.data?.find((m) => m.id === id) ?? matrix;
@@ -123,6 +127,12 @@ export function MiperBoard({ caseId, canManage, userId, orgId }: Props) {
                   </div>
                   <div className="flex gap-1">
                     <Button size="icon" variant="ghost" aria-label="Historial de revisiones" onClick={() => setHistoryFor(h)}><History className="h-4 w-4" /></Button>
+                    {canManage && (h.risk_level === "alto" || h.risk_level === "critico") && (
+                      <Button size="sm" variant="outline" onClick={() => setActionFor(h)}><Wrench className="mr-1 h-4 w-4" />Acción correctiva</Button>
+                    )}
+                    {canManage && (
+                      <Button size="icon" variant="ghost" aria-label="Necesidad de capacitación" onClick={() => setTrainingFor(h)}><GraduationCap className="h-4 w-4" /></Button>
+                    )}
                     {canManage && (
                       <Button size="icon" variant="ghost" aria-label="Editar o revisar" onClick={() => { setEditing(h); setFormOpen(true); }}><Pencil className="h-4 w-4" /></Button>
                     )}
@@ -161,6 +171,11 @@ export function MiperBoard({ caseId, canManage, userId, orgId }: Props) {
       )}
       {orgId && <MatrixConfigDialog open={configOpen} onOpenChange={setConfigOpen} matrix={matrix} orgId={orgId} userId={userId} />}
       <ReviewHistoryDialog hazard={historyFor} onClose={() => setHistoryFor(null)} />
+      {actionFor && <CorrectiveActionDialog hazard={actionFor} userId={userId} onClose={() => setActionFor(null)} />}
+      {trainingFor && (
+        <TrainingFormDialog open onOpenChange={(o) => !o && setTrainingFor(null)} training={null} orgId={trainingFor.organization_id} userId={userId}
+          defaults={{ caseId: trainingFor.source_case_id, hazardId: trainingFor.id, title: `Capacitación: ${trainingFor.hazard}`, workCenterId: trainingFor.work_center_id, areaId: trainingFor.area_id }} />
+      )}
     </div>
   );
 }
@@ -522,6 +537,64 @@ function ReviewHistoryDialog({ hazard, onClose }: { hazard: HazardRow | null; on
             })}
           </ol>
         )}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function CorrectiveActionDialog({ hazard, userId, onClose }: { hazard: HazardRow; userId: string | null; onClose: () => void }) {
+  const qc = useQueryClient();
+  const people = useOrgPeople();
+  const [description, setDescription] = useState(hazard.proposed_controls ?? `Controlar riesgo: ${hazard.hazard} → ${hazard.risk}`);
+  const [responsible, setResponsible] = useState(hazard.owner_id ?? "");
+  const [control, setControl] = useState<ControlType>("ingenieria");
+  const [due, setDue] = useState("");
+  const priority = hazard.risk_level === "critico" ? "critica" : "alta";
+  const save = useMutation({
+    mutationFn: async () => {
+      if (!description.trim()) throw new Error("Describe la acción");
+      if (!responsible) throw new Error("Selecciona un responsable");
+      if (!due) throw new Error("Indica la fecha compromiso");
+      const { data: plan } = await supabase.from("action_plans").select("id").eq("hazard_id", hazard.id).is("deleted_at", null).limit(1).maybeSingle();
+      let planId = plan?.id;
+      if (!planId) {
+        const { data: np, error } = await supabase.from("action_plans").insert({
+          organization_id: hazard.organization_id, hazard_id: hazard.id, case_id: hazard.source_case_id,
+          title: `Plan MIPER: ${hazard.hazard}`.slice(0, 200), priority, created_by: userId,
+        }).select("id").single();
+        if (error) throw error;
+        planId = np.id;
+      }
+      const { error } = await supabase.from("actions").insert({
+        action_plan_id: planId, description: description.trim(), responsible_id: responsible, priority,
+        action_kind: "correctiva", control_type: control, due_date: due, status: "pendiente", created_by: userId,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => { toast.success("Acción correctiva creada y vinculada al riesgo"); void qc.invalidateQueries({ queryKey: ["actions"] }); onClose(); },
+    onError: (e: Error) => toast.error(e.message),
+  });
+  return (
+    <Dialog open onOpenChange={(o) => !o && onClose()}>
+      <DialogContent className="sm:max-w-lg">
+        <DialogHeader><DialogTitle>Acción correctiva desde MIPER</DialogTitle></DialogHeader>
+        <div className="space-y-3">
+          <p className="rounded bg-muted p-2 text-xs">Riesgo {hazard.risk_level_label ?? hazard.risk_level}: {hazard.hazard} → {hazard.risk} · Prioridad {priority === "critica" ? "Crítica" : "Alta"}</p>
+          <div className="space-y-1"><Label>Acción</Label><Textarea rows={3} value={description} onChange={(e) => setDescription(e.target.value)} /></div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <div className="space-y-1"><Label>Responsable</Label>
+              <Select value={responsible} onValueChange={setResponsible}><SelectTrigger><SelectValue placeholder="Seleccionar" /></SelectTrigger>
+                <SelectContent>{(people.data ?? []).map((p) => <SelectItem key={p.id} value={p.id}>{p.full_name ?? "—"}</SelectItem>)}</SelectContent></Select></div>
+            <div className="space-y-1"><Label>Jerarquía de control</Label>
+              <Select value={control} onValueChange={(v) => setControl(v as ControlType)}><SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>{CONTROL_TYPES.map((c) => <SelectItem key={c} value={c}>{CONTROL_LABELS[c]}</SelectItem>)}</SelectContent></Select></div>
+            <div className="space-y-1"><Label>Fecha compromiso</Label><Input type="date" value={due} onChange={(e) => setDue(e.target.value)} /></div>
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>Cancelar</Button>
+          <Button disabled={save.isPending} onClick={() => save.mutate()}>{save.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Crear acción</Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
