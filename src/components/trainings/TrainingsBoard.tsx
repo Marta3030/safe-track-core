@@ -150,7 +150,7 @@ function TrainingItem({ t, canManage, onEdit }: { t: TrainingRow; canManage: boo
   const openEvidence = async () => {
     if (!t.evidence_path) return;
     const { data, error } = await supabase.storage.from(EVIDENCE_BUCKET).createSignedUrl(t.evidence_path, 300);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     window.open(data.signedUrl, "_blank", "noopener");
   };
   const attended = t.training_attendees.filter((a) => a.attended).length;
