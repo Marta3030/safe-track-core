@@ -353,5 +353,5 @@ export function TrainingFormDialog({ open, onOpenChange, training, orgId, userId
 }
 
 function F({ label, children }: { label: string; children: React.ReactNode }) {
-  return <div className="space-y-1"><Label>{label}</Label>{children}</div>;
+  return <Label className="block space-y-1"><span>{label}</span>{children}</Label>;
 }
