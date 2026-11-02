@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Download, Eye, FileText, Loader2, Trash2, Upload } from "lucide-react";
+import { BadgeCheck, Download, Eye, FileText, Loader2, Trash2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -99,6 +99,19 @@ export function EvidencePanel({ caseId, orgId, canManage, userId }: Props) {
     onError: (e: Error) => toast.error(e.message || "No fue posible eliminar"),
   });
 
+  const verify = useMutation({
+    mutationFn: async (row: EvidenceRow) => {
+      const { error: e } = await supabase.from("case_evidences").update({ verified_at: new Date().toISOString() }).eq("id", row.id);
+      if (e) throw e;
+    },
+    onSuccess: () => {
+      toast.success("Evidencia verificada");
+      void qc.invalidateQueries({ queryKey: evidencesQueryKey(caseId) });
+      void qc.invalidateQueries({ queryKey: ["case-closure", caseId] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
   async function open(row: EvidenceRow, download: boolean) {
     const { data: s, error: e } = await supabase.storage
       .from(EVIDENCE_BUCKET)
@@ -193,6 +206,13 @@ export function EvidencePanel({ caseId, orgId, canManage, userId }: Props) {
                   <Button size="sm" variant="ghost" onClick={() => void open(row, true)}>
                     <Download className="mr-1 h-4 w-4" /> Descargar
                   </Button>
+                  {row.verified_at ? (
+                    <span className="inline-flex items-center gap-1 px-2 text-xs text-success"><BadgeCheck className="h-4 w-4" />Verificada</span>
+                  ) : canManage ? (
+                    <Button size="sm" variant="ghost" disabled={verify.isPending} onClick={() => verify.mutate(row)}>
+                      <BadgeCheck className="mr-1 h-4 w-4" />Verificar
+                    </Button>
+                  ) : null}
                   {canManage && (
                     <Button
                       size="sm"

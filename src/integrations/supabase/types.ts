@@ -319,6 +319,51 @@ export type Database = {
           },
         ]
       }
+      case_events: {
+        Row: {
+          actor_id: string | null
+          case_id: string
+          created_at: string
+          data: Json | null
+          description: string
+          event_type: string
+          id: string
+        }
+        Insert: {
+          actor_id?: string | null
+          case_id: string
+          created_at?: string
+          data?: Json | null
+          description: string
+          event_type: string
+          id?: string
+        }
+        Update: {
+          actor_id?: string | null
+          case_id?: string
+          created_at?: string
+          data?: Json | null
+          description?: string
+          event_type?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "case_events_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "case_events_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       case_evidences: {
         Row: {
           case_id: string
@@ -333,6 +378,8 @@ export type Database = {
           id: string
           mime_type: string | null
           updated_at: string
+          verified_at: string | null
+          verified_by: string | null
         }
         Insert: {
           case_id: string
@@ -347,6 +394,8 @@ export type Database = {
           id?: string
           mime_type?: string | null
           updated_at?: string
+          verified_at?: string | null
+          verified_by?: string | null
         }
         Update: {
           case_id?: string
@@ -361,6 +410,8 @@ export type Database = {
           id?: string
           mime_type?: string | null
           updated_at?: string
+          verified_at?: string | null
+          verified_by?: string | null
         }
         Relationships: [
           {
@@ -377,6 +428,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "case_evidences_verified_by_fkey"
+            columns: ["verified_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       cases: {
@@ -387,15 +445,23 @@ export type Database = {
           area_id: string | null
           assigned_to: string | null
           closed_at: string | null
+          closed_by: string | null
+          closure_observation: string | null
+          closure_result: string | null
           code: string | null
           created_at: string
           created_by: string | null
           deleted_at: string | null
           description: string | null
+          final_report: string | null
+          final_report_completed_at: string | null
+          final_report_completed_by: string | null
           id: string
           immediate_actions: string | null
           location_detail: string | null
           lost_days: number
+          miper_na_reason: string | null
+          miper_not_applicable: boolean
           occurred_at: string
           organization_id: string
           reported_at: string
@@ -415,15 +481,23 @@ export type Database = {
           area_id?: string | null
           assigned_to?: string | null
           closed_at?: string | null
+          closed_by?: string | null
+          closure_observation?: string | null
+          closure_result?: string | null
           code?: string | null
           created_at?: string
           created_by?: string | null
           deleted_at?: string | null
           description?: string | null
+          final_report?: string | null
+          final_report_completed_at?: string | null
+          final_report_completed_by?: string | null
           id?: string
           immediate_actions?: string | null
           location_detail?: string | null
           lost_days?: number
+          miper_na_reason?: string | null
+          miper_not_applicable?: boolean
           occurred_at?: string
           organization_id: string
           reported_at?: string
@@ -443,15 +517,23 @@ export type Database = {
           area_id?: string | null
           assigned_to?: string | null
           closed_at?: string | null
+          closed_by?: string | null
+          closure_observation?: string | null
+          closure_result?: string | null
           code?: string | null
           created_at?: string
           created_by?: string | null
           deleted_at?: string | null
           description?: string | null
+          final_report?: string | null
+          final_report_completed_at?: string | null
+          final_report_completed_by?: string | null
           id?: string
           immediate_actions?: string | null
           location_detail?: string | null
           lost_days?: number
+          miper_na_reason?: string | null
+          miper_not_applicable?: boolean
           occurred_at?: string
           organization_id?: string
           reported_at?: string
@@ -482,6 +564,20 @@ export type Database = {
           {
             foreignKeyName: "cases_assigned_to_fkey"
             columns: ["assigned_to"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cases_closed_by_fkey"
+            columns: ["closed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cases_final_report_completed_by_fkey"
+            columns: ["final_report_completed_by"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
@@ -1367,6 +1463,7 @@ export type Database = {
     }
     Functions: {
       can_edit_investigation: { Args: { _inv: string }; Returns: boolean }
+      case_closure_checklist: { Args: { _case_id: string }; Returns: Json }
       case_in_my_org: { Args: { _case_id: string }; Returns: boolean }
       current_org_id: { Args: never; Returns: string }
       has_role: {
