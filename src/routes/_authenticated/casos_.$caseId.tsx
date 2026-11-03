@@ -14,7 +14,7 @@ import { CaseClosurePanel } from "@/components/cases/CaseClosurePanel";
 import { EvidencePanel } from "@/components/cases/EvidencePanel";
 import { ActionsBoard } from "@/components/actions/ActionsBoard";
 import { MiperBoard } from "@/components/miper/MiperBoard";
-import { TrainingsBoard, useTrainings, PENDING_TRAINING } from "@/components/trainings/TrainingsBoard";
+import { TrainingsBoard } from "@/components/trainings/TrainingsBoard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useCase, casesQueryKey } from "@/hooks/use-cases";
@@ -65,15 +65,11 @@ function CaseDetailPage() {
   const { profile, user, role } = useSession();
   const { data, isLoading, isError, error } = useCase(caseId);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const trainings = useTrainings(caseId);
-  const pendingMandatory = (trainings.data ?? []).filter((t) => t.is_mandatory && PENDING_TRAINING.includes(t.status)).length;
 
   const canManage = canManageCases(role) || role === "supervisor";
 
   const changeStatus = useMutation({
     mutationFn: async (next: CaseStatus) => {
-      if false
-        throw new Error("No se puede cerrar: existe capacitación obligatoria pendiente");
       const { error: updateError } = await supabase
         .from("cases")
         .update({
@@ -205,7 +201,7 @@ function CaseDetailPage() {
                       key={next}
                       size="sm"
                       variant={next === "anulado" ? "outline" : "default"}
-                      disabled={changeStatus.isPending || false}
+                      disabled={changeStatus.isPending}
                       onClick={() => changeStatus.mutate(next)}
                     >
                       {changeStatus.isPending && (
