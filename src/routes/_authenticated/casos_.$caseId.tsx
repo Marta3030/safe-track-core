@@ -10,10 +10,11 @@ import { SeverityBadge, StatusBadge, TypeBadge } from "@/components/cases/CaseBa
 import { CaseFormDialog } from "@/components/cases/CaseFormDialog";
 import { InvestigationPanel } from "@/components/cases/InvestigationPanel";
 import { CausalAnalysisPanel } from "@/components/cases/CausalAnalysisPanel";
+import { CaseClosurePanel } from "@/components/cases/CaseClosurePanel";
 import { EvidencePanel } from "@/components/cases/EvidencePanel";
 import { ActionsBoard } from "@/components/actions/ActionsBoard";
 import { MiperBoard } from "@/components/miper/MiperBoard";
-import { TrainingsBoard, useTrainings, PENDING_TRAINING } from "@/components/trainings/TrainingsBoard";
+import { TrainingsBoard } from "@/components/trainings/TrainingsBoard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useCase, casesQueryKey } from "@/hooks/use-cases";
@@ -64,15 +65,11 @@ function CaseDetailPage() {
   const { profile, user, role } = useSession();
   const { data, isLoading, isError, error } = useCase(caseId);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const trainings = useTrainings(caseId);
-  const pendingMandatory = (trainings.data ?? []).filter((t) => t.is_mandatory && PENDING_TRAINING.includes(t.status)).length;
 
   const canManage = canManageCases(role) || role === "supervisor";
 
   const changeStatus = useMutation({
     mutationFn: async (next: CaseStatus) => {
-      if (next === "cerrado" && pendingMandatory > 0)
-        throw new Error("No se puede cerrar: existe capacitación obligatoria pendiente");
       const { error: updateError } = await supabase
         .from("cases")
         .update({
@@ -139,6 +136,7 @@ function CaseDetailPage() {
               <TabsTrigger value="miper">MIPER</TabsTrigger>
               <TabsTrigger value="capacitaciones">Capacitaciones</TabsTrigger>
               <TabsTrigger value="evidencias">Evidencias</TabsTrigger>
+              <TabsTrigger value="cierre">Cierre</TabsTrigger>
             </TabsList>
             <TabsContent value="expediente" className="space-y-4">
             <section className="surface-card space-y-3 p-5">
@@ -198,12 +196,12 @@ function CaseDetailPage() {
               </p>
               {canManage ? (
                 <div className="flex flex-wrap gap-2">
-                  {CASE_STATUS_FLOW[data.status].map((next) => (
+                  {CASE_STATUS_FLOW[data.status].filter((n) => n !== "cerrado").map((next) => (
                     <Button
                       key={next}
                       size="sm"
                       variant={next === "anulado" ? "outline" : "default"}
-                      disabled={changeStatus.isPending || (next === "cerrado" && pendingMandatory > 0)}
+                      disabled={changeStatus.isPending}
                       onClick={() => changeStatus.mutate(next)}
                     >
                       {changeStatus.isPending && (
@@ -212,9 +210,9 @@ function CaseDetailPage() {
                       Pasar a {CASE_STATUS_LABELS[next]}
                     </Button>
                   ))}
-                  {CASE_STATUS_FLOW[data.status].includes("cerrado") && pendingMandatory > 0 && (
-                    <p className="w-full text-sm text-destructive">
-                      No está listo para cierre: hay {pendingMandatory} capacitación(es) obligatoria(s) pendiente(s).
+                  {CASE_STATUS_FLOW[data.status].includes("cerrado") && (
+                    <p className="w-full text-sm text-muted-foreground">
+                      Para cerrar el caso usa la pestaña “Cierre”, que valida el checklist obligatorio.
                     </p>
                   )}
                   {CASE_STATUS_FLOW[data.status].length === 0 && (
@@ -253,6 +251,10 @@ function CaseDetailPage() {
 
             <TabsContent value="capacitaciones">
               <TrainingsBoard caseId={caseId} canManage={canManageCases(role)} userId={user?.id ?? null} orgId={data.organization_id ?? null} />
+            </TabsContent>
+
+            <TabsContent value="cierre">
+              <CaseClosurePanel caseRow={data} canManage={canManageCases(role)} />
             </TabsContent>
 
             <TabsContent value="evidencias">

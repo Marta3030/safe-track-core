@@ -11,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { formatDateTime, type CaseRow } from "@/lib/cases";
 import { cn } from "@/lib/utils";
+import type { Database } from "@/integrations/supabase/types";
 
 type CheckItem = { key: string; label: string; ok: boolean; detail: string };
 export const CLOSURE_RESULTS = ["Cerrado conforme", "Cerrado con observaciones"] as const;
@@ -61,7 +62,7 @@ export function CaseClosurePanel({ caseRow, canManage }: { caseRow: CaseRow; can
   };
 
   const update = useMutation({
-    mutationFn: async (patch: Record<string, unknown>) => {
+    mutationFn: async (patch: Database["public"]["Tables"]["cases"]["Update"]) => {
       const { error } = await supabase.from("cases").update(patch).eq("id", caseId);
       if (error) throw error;
     },

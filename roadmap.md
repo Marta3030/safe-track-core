@@ -19,5 +19,5 @@
 - [x] 8 Verificación de eficacia
 - [x] 9 MIPER configurable 5x5 con historial
 - [x] 10 Capacitaciones
-- [ ] 11 Cierre del caso
+- [x] 11 Cierre del caso
 - [ ] 12 Dashboard definitivo
