@@ -72,7 +72,7 @@ function CaseDetailPage() {
 
   const changeStatus = useMutation({
     mutationFn: async (next: CaseStatus) => {
-      if (next === "cerrado" && pendingMandatory > 0)
+      if false
         throw new Error("No se puede cerrar: existe capacitación obligatoria pendiente");
       const { error: updateError } = await supabase
         .from("cases")
@@ -205,7 +205,7 @@ function CaseDetailPage() {
                       key={next}
                       size="sm"
                       variant={next === "anulado" ? "outline" : "default"}
-                      disabled={changeStatus.isPending || (next === "cerrado" && pendingMandatory > 0)}
+                      disabled={changeStatus.isPending || false}
                       onClick={() => changeStatus.mutate(next)}
                     >
                       {changeStatus.isPending && (
