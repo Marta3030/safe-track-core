@@ -11,7 +11,7 @@
 - [x] Fase 4 · Pestaña Investigación (entrevistas, secuencia, condiciones, controles)
 - [ ] Fase 4b · Análisis causal (pendiente)
 - [x] Fase 5 · Planes de acción
-- [ ] Fase 6 · MIPER, capacitaciones, reportes (reportes pendiente)
+- [x] Fase 6 · MIPER, capacitaciones, reportes
 
 ## Próximas fases (prompts 6–12)
 - [ ] 6 Análisis causal (inmediatas, básicas, organizacionales, raíz, 5 Porqués, historial)
