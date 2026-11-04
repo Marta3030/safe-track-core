@@ -77,7 +77,7 @@ export function computeDashboard(
   today = new Date(),
 ) {
   const keys = monthKeys(months, today);
-  const firstKey = keys[0].key;
+  const firstKey = keys[0]?.key ?? "";
   const inPeriod = cases.filter((c) => c.occurred_at.slice(0, 7) >= firstKey);
   const caseIds = new Set(cases.map((c) => c.id));
   const scopedActions = actions.filter((a) => !a.case_id || caseIds.has(a.case_id));
