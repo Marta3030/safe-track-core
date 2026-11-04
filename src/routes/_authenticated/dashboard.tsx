@@ -38,10 +38,10 @@ import { ACTION_STATUS_LABELS, type ActionStatus } from "@/lib/actions";
 type Search = { months: number; center: string; type: string };
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  validateSearch: (s: Record<string, unknown>): Search => ({
-    months: [3, 6, 12, 24].includes(Number(s.months)) ? Number(s.months) : 12,
-    center: typeof s.center === "string" ? s.center : "all",
-    type: typeof s.type === "string" ? s.type : "all",
+  validateSearch: (s: Record<string, unknown>): Partial<Search> => ({
+    months: [3, 6, 12, 24].includes(Number(s["months"])) ? Number(s["months"]) : undefined,
+    center: typeof s["center"] === "string" ? s["center"] : undefined,
+    type: typeof s["type"] === "string" ? s["type"] : undefined,
   }),
   head: () => ({
     meta: [
@@ -83,7 +83,8 @@ function Empty() {
 }
 
 function DashboardPage() {
-  const search = Route.useSearch();
+  const raw = Route.useSearch();
+  const search: Search = { months: raw.months ?? 12, center: raw.center ?? "all", type: raw.type ?? "all" };
   const navigate = useNavigate({ from: Route.fullPath });
   const { data, isLoading, error } = useDashboardData();
   const set = (patch: Partial<Search>) => navigate({ search: (p) => ({ ...p, ...patch }) });
