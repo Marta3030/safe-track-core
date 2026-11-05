@@ -284,6 +284,7 @@ export type Database = {
           created_by: string | null
           deleted_at: string | null
           department: string | null
+          department_id: string | null
           id: string
           name: string
           updated_at: string
@@ -294,6 +295,7 @@ export type Database = {
           created_by?: string | null
           deleted_at?: string | null
           department?: string | null
+          department_id?: string | null
           id?: string
           name: string
           updated_at?: string
@@ -304,6 +306,7 @@ export type Database = {
           created_by?: string | null
           deleted_at?: string | null
           department?: string | null
+          department_id?: string | null
           id?: string
           name?: string
           updated_at?: string
@@ -311,10 +314,68 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "areas_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "areas_work_center_id_fkey"
             columns: ["work_center_id"]
             isOneToOne: false
             referencedRelation: "work_centers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      audit_log: {
+        Row: {
+          action: string
+          actor_id: string | null
+          created_at: string
+          data: Json | null
+          entity: string
+          id: string
+          organization_id: string | null
+          record_id: string | null
+          summary: string
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string
+          data?: Json | null
+          entity: string
+          id?: string
+          organization_id?: string | null
+          record_id?: string | null
+          summary: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string
+          data?: Json | null
+          entity?: string
+          id?: string
+          organization_id?: string | null
+          record_id?: string | null
+          summary?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_log_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "audit_log_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -645,6 +706,51 @@ export type Database = {
             columns: ["investigation_id"]
             isOneToOne: false
             referencedRelation: "investigations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      departments: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          deleted_at: string | null
+          id: string
+          name: string
+          updated_at: string
+          work_center_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+          work_center_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+          work_center_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "departments_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "departments_work_center_id_fkey"
+            columns: ["work_center_id"]
+            isOneToOne: false
+            referencedRelation: "work_centers"
             referencedColumns: ["id"]
           },
         ]
@@ -1089,6 +1195,57 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          kind: string
+          link: string | null
+          organization_id: string | null
+          read_at: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          kind: string
+          link?: string | null
+          organization_id?: string | null
+          read_at?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          link?: string | null
+          organization_id?: string | null
+          read_at?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organizations: {
         Row: {
           created_at: string
@@ -1465,6 +1622,7 @@ export type Database = {
       can_edit_investigation: { Args: { _inv: string }; Returns: boolean }
       case_closure_checklist: { Args: { _case_id: string }; Returns: Json }
       case_in_my_org: { Args: { _case_id: string }; Returns: boolean }
+      center_in_my_org: { Args: { _center: string }; Returns: boolean }
       current_org_id: { Args: never; Returns: string }
       has_role: {
         Args: {
@@ -1475,11 +1633,13 @@ export type Database = {
       }
       investigation_in_my_org: { Args: { _inv: string }; Returns: boolean }
       is_hse_manager: { Args: { _user_id: string }; Returns: boolean }
+      is_hse_writer: { Args: never; Returns: boolean }
       matrix_level: {
         Args: { _levels: Json; _score: number }
         Returns: Record<string, unknown>
       }
       refresh_overdue_actions: { Args: never; Returns: number }
+      user_in_my_org: { Args: { _user: string }; Returns: boolean }
       verify_action: {
         Args: {
           _action_id: string
