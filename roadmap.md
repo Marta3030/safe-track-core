@@ -21,3 +21,4 @@
 - [x] 10 Capacitaciones
 - [x] 11 Cierre del caso
 - [ ] 12 Dashboard definitivo
+- [x] Fases 2 y 11 · Administración: estructura, invitaciones y roles, auditoría, notificaciones
